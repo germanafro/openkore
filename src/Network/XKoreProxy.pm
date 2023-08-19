@@ -239,11 +239,6 @@ sub clientRecv {
 		return undef;
 	}
 
-	if($self->getState() eq Network::IN_GAME || $self->getState() eq Network::CONNECTED_TO_CHAR_SERVER) {
-		$self->onClientData($msg);
-		return undef;
-	}
-
 	return $msg;
 }
 
@@ -255,9 +250,6 @@ sub onClientData {
 	while (my $message = $self->{tokenizer}->readNext(\$type)) {
 		$msg .= $message;
 	}
-	$self->decryptMessageID(\$msg);
-
-	$msg = $self->{tokenizer}->slicePacket($msg, \$additional_data); # slice packet if needed
 
 	$self->{tokenizer}->add($msg, 1);
 

@@ -843,10 +843,8 @@ sub mainLoop_initialized {
 	if (defined($data) && length($data) > 0) {
 		my $type;
 		#$messageSender->encryptMessageID(\$data);
-		$outgoingClientMessages->add($data);
-		$messageSender->sendToServer($_) for $messageSender->process(
-			$outgoingClientMessages, $clientPacketHandler
-		);
+		#$outgoingClientMessages->add($data);
+		$messageSender->sendToServer($data);
 	}
 
 	# GameGuard support

@@ -223,6 +223,11 @@ sub pinEncode {
 	return $pin_reply;
 }
 
+
+sub dontSendToServer {
+	my ($self, $msg) = @_;
+	return;
+}
 ##
 # void $messageSender->sendToServer(Bytes msg)
 #
@@ -293,7 +298,7 @@ sub sendRaw {
 	foreach (@raw) {
 		$msg .= pack("C", hex($_));
 	}
-	$self->sendToServer($msg);
+	$self->dontSendToServer($msg);
 	debug "Sent Raw Packet: @raw\n", "sendPacket", 2;
 }
 
@@ -372,7 +377,7 @@ sub sendMasterLogin {
 			pack("C*", $master_version);
 	}
 
-	$self->sendToServer($msg);
+	$self->dontSendToServer($msg);
 	debug "Sent sendMasterLogin\n", "sendPacket", 2;
 }
 
@@ -396,7 +401,7 @@ sub sendMasterSecureLogin {
 
 	$self->{packet_lut}{master_login} ||= $type < 3 ? '01DD' : '01FA';
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'master_login',
 		version => $version || $self->version,
 		master_version => $master_version,
@@ -427,7 +432,7 @@ sub reconstruct_game_login {
 # TODO: $masterServer->{gameLogin_packet}?
 sub sendGameLogin {
 	my ($self, $accountID, $sessionID, $sessionID2, $sex) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'game_login',
 		accountID => $accountID,
 		sessionID => $sessionID,
@@ -440,7 +445,7 @@ sub sendGameLogin {
 
 sub sendCharLogin {
 	my ($self, $char) = @_;
-	$self->sendToServer($self->reconstruct({switch => 'char_login', slot => $char}));
+	$self->dontSendToServer($self->reconstruct({switch => 'char_login', slot => $char}));
 	debug "Sent sendCharLogin\n", "sendPacket", 2;
 }
 
@@ -475,7 +480,7 @@ sub sendMapLogin {
 			pack("C", $sex);
 	}
 
-	$self->sendToServer($msg);
+	$self->dontSendToServer($msg);
 	debug "Sent sendMapLogin\n", "sendPacket", 2;
 }
 
@@ -483,7 +488,7 @@ sub sendMapLoaded {
 	my $self = shift;
 	$syncSync = pack("V", getTickCount());
 	debug "Sending Map Loaded\n", "sendPacket";
-	$self->sendToServer($self->reconstruct({switch => 'map_loaded'}));
+	$self->dontSendToServer($self->reconstruct({switch => 'map_loaded'}));
 	Plugins::callHook('packet/sendMapLoaded');
 }
 
@@ -497,7 +502,7 @@ sub sendSync {
 	# XKore mode 1 lets the client take care of syncing.
 	return if ($self->{net}->version == 1);
 
-	$self->sendToServer($self->reconstruct({switch => 'sync'}));
+	$self->dontSendToServer($self->reconstruct({switch => 'sync'}));
 	debug "Sent Sync\n", "sendPacket", 2;
 }
 
@@ -517,7 +522,7 @@ sub reconstruct_character_move {
 sub sendMove {
 	my ($self, $x, $y) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'character_move',
 		x => $x,
 		y => $y
@@ -536,11 +541,11 @@ sub sendAction { # flag: 0 attack (once), 7 attack (continuous), 2 sit, 3 stand
 	Plugins::callHook('packet_pre/sendAttack', \%args) if $flag == ACTION_ATTACK || $flag == ACTION_ATTACK_REPEAT;
 	Plugins::callHook('packet_pre/sendSit', \%args) if $flag == ACTION_SIT || $flag == ACTION_STAND;
 	if ($args{return}) {
-		$self->sendToServer($args{msg});
+		$self->dontSendToServer($args{msg});
 		return;
 	}
 
-	$self->sendToServer($self->reconstruct({switch => 'actor_action', targetID => $monID, type => $flag}));
+	$self->dontSendToServer($self->reconstruct({switch => 'actor_action', targetID => $monID, type => $flag}));
 	debug "Sent Action: " .$flag. " on: " .getHex($monID)."\n", "sendPacket", 2;
 }
 
@@ -556,18 +561,18 @@ sub reconstruct_public_chat {
 
 sub sendChat {
 	my ($self, $message) = @_;
-	$self->sendToServer($self->reconstruct({switch => 'public_chat', message => $message}));
+	$self->dontSendToServer($self->reconstruct({switch => 'public_chat', message => $message}));
 }
 
 sub sendGetPlayerInfo {
 	my ($self, $ID) = @_;
-	$self->sendToServer($self->reconstruct({switch => 'actor_info_request', ID => $ID}));
+	$self->dontSendToServer($self->reconstruct({switch => 'actor_info_request', ID => $ID}));
 	debug "Sent get player info: ID - ".getHex($ID)."\n", "sendPacket", 2;
 }
 
 sub sendGetCharacterName {
 	my ($self, $ID) = @_;
-	$self->sendToServer($self->reconstruct({switch => 'actor_name_request', ID => $ID}));
+	$self->dontSendToServer($self->reconstruct({switch => 'actor_name_request', ID => $ID}));
 	debug "Sent get character name: ID - ".getHex($ID)."\n", "sendPacket", 2;
 }
 
@@ -575,20 +580,20 @@ sub sendTalk {
 	my ($self, $ID) = @_;
 	delete $talk{msg};
 	delete $talk{image};
-	$self->sendToServer($self->reconstruct({switch => 'npc_talk', ID => $ID, type => 1}));
+	$self->dontSendToServer($self->reconstruct({switch => 'npc_talk', ID => $ID, type => 1}));
 	debug "Sent talk: ".getHex($ID)."\n", "sendPacket", 2;
 }
 
 sub sendTalkCancel {
 	my ($self, $ID) = @_;
 	undef %talk;
-	$self->sendToServer($self->reconstruct({switch => 'npc_talk_cancel', ID => $ID}));
+	$self->dontSendToServer($self->reconstruct({switch => 'npc_talk_cancel', ID => $ID}));
 	debug "Sent talk cancel: ".getHex($ID)."\n", "sendPacket", 2;
 }
 
 sub sendTalkContinue {
 	my ($self, $ID) = @_;
-	$self->sendToServer($self->reconstruct({switch => 'npc_talk_continue', ID => $ID}));
+	$self->dontSendToServer($self->reconstruct({switch => 'npc_talk_continue', ID => $ID}));
 	debug "Sent talk continue: ".getHex($ID)."\n", "sendPacket", 2;
 }
 
@@ -596,7 +601,7 @@ sub sendTalkResponse {
 	my ($self, $ID, $response) = @_;
 	delete $talk{msg};
 	delete $talk{image};
-	$self->sendToServer($self->reconstruct({switch => 'npc_talk_response', ID => $ID, response => $response}));
+	$self->dontSendToServer($self->reconstruct({switch => 'npc_talk_response', ID => $ID, response => $response}));
 	debug "Sent talk respond: ".getHex($ID).", $response\n", "sendPacket", 2;
 }
 
@@ -604,7 +609,7 @@ sub sendTalkNumber {
 	my ($self, $ID, $number) = @_;
 	delete $talk{msg};
 	delete $talk{image};
-	$self->sendToServer($self->reconstruct({switch => 'npc_talk_number', ID => $ID, value => $number}));
+	$self->dontSendToServer($self->reconstruct({switch => 'npc_talk_number', ID => $ID, value => $number}));
 	debug "Sent talk number: ".getHex($ID).", $number\n", "sendPacket", 2;
 }
 
@@ -613,7 +618,7 @@ sub sendTalkText {
 	delete $talk{msg};
 	delete $talk{image};
 	$input = stringToBytes($input);
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'npc_talk_text',
 		len => length($input)+length($ID)+5,
 		ID => $ID,
@@ -638,31 +643,31 @@ sub reconstruct_private_message {
 
 sub sendPrivateMsg {
 	my ($self, $user, $message) = @_;
-	$self->sendToServer($self->reconstruct({ switch => 'private_message', privMsg => $message, privMsgUser => $user, }));
+	$self->dontSendToServer($self->reconstruct({ switch => 'private_message', privMsg => $message, privMsgUser => $user, }));
 }
 
 sub sendLook {
 	my ($self, $body, $head) = @_;
-	$self->sendToServer($self->reconstruct({switch => 'actor_look_at', body => $body, head => $head}));
+	$self->dontSendToServer($self->reconstruct({switch => 'actor_look_at', body => $body, head => $head}));
 	debug "Sent look: $body $head\n", "sendPacket", 2;
 	@{$char->{look}}{qw(body head)} = ($body, $head);
 }
 
 sub sendTake {
 	my ($self, $itemID) = @_;
-	$self->sendToServer($self->reconstruct({switch => 'item_take', ID => $itemID}));
+	$self->dontSendToServer($self->reconstruct({switch => 'item_take', ID => $itemID}));
 	debug "Sent take\n", "sendPacket", 2;
 }
 
 sub sendDrop {
 	my ($self, $ID, $amount) = @_;
-	$self->sendToServer($self->reconstruct({switch => 'item_drop', ID => $ID, amount => $amount}));
+	$self->dontSendToServer($self->reconstruct({switch => 'item_drop', ID => $ID, amount => $amount}));
 	debug sprintf("Sent drop: %s x $amount\n", unpack('v', $ID)), "sendPacket", 2;
 }
 
 sub sendItemUse {
 	my ($self, $ID, $targetID) = @_;
-	$self->sendToServer($self->reconstruct({switch => 'item_use', ID => $ID, targetID => $targetID}));
+	$self->dontSendToServer($self->reconstruct({switch => 'item_use', ID => $ID, targetID => $targetID}));
 	debug sprintf("Item Use: %s\n", unpack('v', $ID)), "sendPacket", 2;
 }
 
@@ -676,16 +681,16 @@ sub sendQuitToCharSelect { $_[0]->sendRestart(1) }
 # type: 0=respawn ; 1=return to char select
 sub sendRestart {
 	my ($self, $type) = @_;
-	$self->sendToServer($self->reconstruct({switch => 'restart', type => $type}));
+	$self->dontSendToServer($self->reconstruct({switch => 'restart', type => $type}));
 	debug "Sent Restart: " . ($type ? 'Quit To Char Selection' : 'Respawn') . "\n", "sendPacket", 2;
 }
 
 sub sendStorageAdd {
 	my ($self, $ID, $amount) = @_;
 	if ($config{storageAuto_type} == 1) {
-		$self->sendToServer($self->reconstruct({switch => 'guild_storage_item_add', ID => $ID, amount => $amount}));
+		$self->dontSendToServer($self->reconstruct({switch => 'guild_storage_item_add', ID => $ID, amount => $amount}));
 	} else {
-		$self->sendToServer($self->reconstruct({switch => 'storage_item_add', ID => $ID, amount => $amount}));
+		$self->dontSendToServer($self->reconstruct({switch => 'storage_item_add', ID => $ID, amount => $amount}));
 	}
 	debug sprintf("Sent Storage Add: %s x $amount\n", unpack('v', $ID)), "sendPacket", 2;
 }
@@ -693,9 +698,9 @@ sub sendStorageAdd {
 sub sendStorageGet {
 	my ($self, $ID, $amount) = @_;
 	if ($config{storageAuto_type} == 1) {
-		$self->sendToServer($self->reconstruct({switch => 'guild_storage_item_remove', ID => $ID, amount => $amount}));
+		$self->dontSendToServer($self->reconstruct({switch => 'guild_storage_item_remove', ID => $ID, amount => $amount}));
 	} else {
-		$self->sendToServer($self->reconstruct({switch => 'storage_item_remove', ID => $ID, amount => $amount}));
+		$self->dontSendToServer($self->reconstruct({switch => 'storage_item_remove', ID => $ID, amount => $amount}));
 	}
 	debug sprintf("Sent Storage Get: %s x $amount\n", unpack('v', $ID)), "sendPacket", 2;
 }
@@ -705,7 +710,7 @@ sub sendStoragePassword {
 
 	# $pass -> 16 byte packed hex data
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'storage_password',
 		type => $type,
 		pass => $pass,
@@ -741,7 +746,7 @@ sub reconstruct_party_chat {
 
 sub sendPartyChat {
 	my ($self, $message) = @_;
-	$self->sendToServer($self->reconstruct({switch => 'party_chat', message => $message}));
+	$self->dontSendToServer($self->reconstruct({switch => 'party_chat', message => $message}));
 }
 
 
@@ -759,7 +764,7 @@ sub reconstruct_buy_bulk_vender {
 # not "buy", it sells items!
 sub sendBuyBulkVender {
 	my ($self, $venderID, $r_array, $venderCID) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'buy_bulk_vender',
 		venderID => $venderID,
 		venderCID => $venderCID,
@@ -780,7 +785,7 @@ sub sendBuyBulkBuyer {
 	
 	my $len = 12 + (scalar @{$r_array} * 8);
 	
-    $self->sendToServer($self->reconstruct({
+    $self->dontSendToServer($self->reconstruct({
         switch => 'buy_bulk_buyer',
 		len => $len,
         buyerID => $buyerID,
@@ -791,7 +796,7 @@ sub sendBuyBulkBuyer {
 
 sub sendEnteringBuyer {
 	my ($self, $ID) = @_;
-	$self->sendToServer($self->reconstruct({switch => 'buy_bulk_request', ID => $ID}));
+	$self->dontSendToServer($self->reconstruct({switch => 'buy_bulk_request', ID => $ID}));
 	debug "Sent Entering Buyer: ID - ".getHex($ID)."\n", "sendPacket", 2;
 }
 
@@ -800,7 +805,7 @@ sub sendBuyBulkOpenShop {
 
 	my $len = 89 + (($#items + 1) * 8);
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'buy_bulk_openShop',
 		len => $len,
 		limitZeny => $limitZeny,
@@ -825,29 +830,29 @@ sub sendSkillUse {
 	my %args;
 	Plugins::callHook('packet_pre/sendSkillUse', \%args);
 	if ($args{return}) {
-		$self->sendToServer($args{msg});
+		$self->dontSendToServer($args{msg});
 		return;
 	}
 ##########################
-	$self->sendToServer($self->reconstruct({switch => 'skill_use', lv => $lv, skillID => $ID, targetID => $targetID}));
+	$self->dontSendToServer($self->reconstruct({switch => 'skill_use', lv => $lv, skillID => $ID, targetID => $targetID}));
 	debug "Skill Use: $ID\n", "sendPacket", 2;
 }
 
 sub sendSkillUseLoc {
 	my ($self, $ID, $lv, $x, $y) = @_;
-	$self->sendToServer($self->reconstruct({switch => 'skill_use_location', lv => $lv, skillID => $ID, x => $x, y => $y}));
+	$self->dontSendToServer($self->reconstruct({switch => 'skill_use_location', lv => $lv, skillID => $ID, x => $x, y => $y}));
 	debug "Skill Use on Location: $ID, ($x, $y)\n", "sendPacket", 2;
 }
 
 sub sendGuildMasterMemberCheck {
 	my ($self, $ID) = @_;
-	$self->sendToServer($self->reconstruct({switch => 'guild_check'}));
+	$self->dontSendToServer($self->reconstruct({switch => 'guild_check'}));
 	debug "Sent Guild Master/Member Check.\n", "sendPacket";
 }
 
 sub sendGuildRequestInfo {
 	my ($self, $page) = @_; # page 0-4
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'guild_info_request',
 		type => $page,
 	}));
@@ -866,18 +871,18 @@ sub reconstruct_guild_chat {
 
 sub sendGuildChat {
 	my ($self, $message) = @_;
-	$self->sendToServer($self->reconstruct({switch => 'guild_chat', message => $message}));
+	$self->dontSendToServer($self->reconstruct({switch => 'guild_chat', message => $message}));
 }
 
 sub sendQuit {
 	my $self = shift;
-	$self->sendToServer($self->reconstruct({switch => 'quit_request', type => 0}));
+	$self->dontSendToServer($self->reconstruct({switch => 'quit_request', type => 0}));
 	debug "Sent Quit\n", "sendPacket", 2;
 }
 
 sub sendCloseShop {
 	my $self = shift;
-	$self->sendToServer($self->reconstruct({switch => 'shop_close'}));
+	$self->dontSendToServer($self->reconstruct({switch => 'shop_close'}));
 	debug "Shop Closed\n", "sendPacket", 2;
 }
 
@@ -887,7 +892,7 @@ sub sendCloseShop {
 sub sendPartyOption {
 	my ($self, $exp, $itemPickup, $itemDivision) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'party_setting',
 		exp => $exp,
 		itemPickup => $itemPickup,
@@ -900,7 +905,7 @@ sub sendPartyOption {
 sub sendPartyLeader {
 	my ($self, $ID) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'party_leader',
 		accountID => $ID,
 	}));
@@ -912,7 +917,7 @@ sub sendPartyLeader {
 sub sendPartyBookingRegister {
 	my ($self, $level, $MapID, @jobList) = @_;
 
-	$self->sendToServer($self->reconstruct({switch => 'booking_register', level => $level, MapID => $MapID,
+	$self->dontSendToServer($self->reconstruct({switch => 'booking_register', level => $level, MapID => $MapID,
 						job0 => @jobList[0], job1 => @jobList[1], job2 => @jobList[2],
 						job3 => @jobList[3], job4 => @jobList[4], job5 => @jobList[5]}));
 
@@ -926,14 +931,14 @@ sub sendPartyBookingReqSearch {
 	$job = "65535" if ($job == 0); # job null = 65535
 	$ResultCount = "10" if ($ResultCount == 0); # ResultCount defaut = 10
 
-	$self->sendToServer($self->reconstruct({switch => 'booking_search', level => $level, MapID => $MapID, job => $job, LastIndex => $LastIndex, ResultCount => $ResultCount}));
+	$self->dontSendToServer($self->reconstruct({switch => 'booking_search', level => $level, MapID => $MapID, job => $job, LastIndex => $LastIndex, ResultCount => $ResultCount}));
 	debug "Sent Booking Search\n", "sendPacket", 2;
 }
 
 # 0x806
 sub sendPartyBookingDelete {
 	my $self = shift;
-	$self->sendToServer($self->reconstruct({switch => 'booking_delete'}));
+	$self->dontSendToServer($self->reconstruct({switch => 'booking_delete'}));
 	debug "Booking Deleted\n", "sendPacket", 2;
 }
 
@@ -941,7 +946,7 @@ sub sendPartyBookingDelete {
 sub sendPartyBookingUpdate {
 	my ($self, @jobList) = @_;
 
-	$self->sendToServer($self->reconstruct({switch => 'booking_update', job0 => @jobList[0],
+	$self->dontSendToServer($self->reconstruct({switch => 'booking_update', job0 => @jobList[0],
 						job1 => @jobList[1], job2 => @jobList[2], job3 => @jobList[3],
 						job4 => @jobList[4], job5 => @jobList[5]}));
 
@@ -952,7 +957,7 @@ sub sendPartyBookingUpdate {
 sub sendCharDelete2 {
 	my ($self, $charID) = @_;
 
-	$self->sendToServer($self->reconstruct({switch => 'char_delete2', charID => $charID}));
+	$self->dontSendToServer($self->reconstruct({switch => 'char_delete2', charID => $charID}));
 	debug "Sent sendCharDelete2\n", "sendPacket", 2;
 }
 
@@ -962,7 +967,7 @@ sub sendCharDelete2 {
 sub sendCharDelete2Accept {
 	my ($self, $charID, $code) = @_;
 
-	$self->sendToServer($self->reconstruct({switch => 'char_delete2_accept', charID => $charID, code => $code}));
+	$self->dontSendToServer($self->reconstruct({switch => 'char_delete2_accept', charID => $charID, code => $code}));
 }
 
 sub reconstruct_char_delete2_accept {
@@ -974,7 +979,7 @@ sub reconstruct_char_delete2_accept {
 sub sendCharDelete2Cancel {
 	my ($self, $charID) = @_;
 
-	$self->sendToServer($self->reconstruct({switch => 'char_delete2_cancel', charID => $charID}));
+	$self->dontSendToServer($self->reconstruct({switch => 'char_delete2_cancel', charID => $charID}));
 	debug "Sent sendCharDelete2Cancel\n", "sendPacket", 2;
 }
 
@@ -1006,7 +1011,7 @@ sub reconstruct_client_hash {
 # TODO: clientHash and secureLogin_requestCode is almost the same, merge
 sub sendClientMD5Hash {
 	my ($self) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'client_hash',
 		hash => pack('H32', $masterServer->{clientHash}), # ex 82d12c914f5ad48fd96fcf7ef4cc492d (kRO sakray != kRO main)
 	}));
@@ -1028,7 +1033,7 @@ sub reconstruct_actor_move {
 sub sendSlaveMove {
 	my ($self, $ID, $x, $y) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'actor_move',
 		ID => $ID,
 		x => $x,
@@ -1040,7 +1045,7 @@ sub sendSlaveMove {
 
 sub sendFriendListReply {
 	my ($self, $accountID, $charID, $flag) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'friend_response',
 		friendAccountID => $accountID,
 		friendCharID => $charID,
@@ -1054,7 +1059,7 @@ sub sendFriendRequest {
 	my $binName = stringToBytes($name);
 	$binName = substr($binName, 0, 24) if (length($binName) > 24);
 	$binName = $binName . chr(0) x (24 - length($binName));
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'friend_request',
 		username => $binName,
 
@@ -1064,7 +1069,7 @@ sub sendFriendRequest {
 
 sub sendHomunculusCommand {
 	my ($self, $command, $type) = @_; # $type is ignored, $command can be 0:get stats, 1:feed or 2:fire
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'homunculus_command',
 		commandType => $type,
 		commandID => $command,
@@ -1076,7 +1081,7 @@ sub sendPartyJoinRequestByName
 {
 	my ($self, $name) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'party_join_request_by_name',
 		partyName => stringToBytes ($name),
 	}));
@@ -1086,7 +1091,7 @@ sub sendPartyJoinRequestByName
 
 sub sendSkillSelect {
 	my ($self, $skillID, $why) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'skill_select',
 		skillID => $skillID,
 		why => $why,
@@ -1098,7 +1103,7 @@ sub sendReplySyncRequestEx {
 	my ($self, $SyncID) = @_;
 	# Packing New Message and Dispatching
 
-	$self->sendToServer(pack("v", $SyncID));
+	$self->dontSendToServer(pack("v", $SyncID));
 	# Debug Log
 	# print "Dispatching Sync Ex Reply : 0x" . $pid . "\n";
 	# Debug Log
@@ -1123,32 +1128,32 @@ sub sendLoginPinCode {
 			pin => $pin,
 		});
 	}
-	$self->sendToServer($msg);
+	$self->dontSendToServer($msg);
 	$timeout{charlogin}{time} = time;
 	debug "Sent loginPinCode\n", "sendPacket", 2;
 }
 
 sub sendCloseBuyShop {
 	my $self = shift;
-	$self->sendToServer($self->reconstruct({switch => 'buy_bulk_closeShop'}));
+	$self->dontSendToServer($self->reconstruct({switch => 'buy_bulk_closeShop'}));
 	debug "Buying Shop Closed\n", "sendPacket", 2;
 }
 
 sub sendRequestCashItemsList {
 	my $self = shift;
-	$self->sendToServer($self->reconstruct({switch => 'request_cashitems'}));
+	$self->dontSendToServer($self->reconstruct({switch => 'request_cashitems'}));
 	debug "Requesting cashItemsList\n", "sendPacket", 2;
 }
 
 sub sendCashShopOpen {
 	my ($self) = @_;
-	$self->sendToServer($self->reconstruct({switch => 'cash_shop_open'}));
+	$self->dontSendToServer($self->reconstruct({switch => 'cash_shop_open'}));
 	debug "Requesting sendCashShopOpen\n", "sendPacket", 2;
 }
 
 sub sendCashShopClose {
 	my ($self) = @_;
-	$self->sendToServer($self->reconstruct({switch => 'cash_shop_close'}));
+	$self->dontSendToServer($self->reconstruct({switch => 'cash_shop_close'}));
 	undef $cashShop{points};
 	debug "Requesting sendCashShopClose\n", "sendPacket", 2;
 }
@@ -1156,7 +1161,7 @@ sub sendCashShopClose {
 sub sendCashBuy {
 	my ($self, $kafra_points, $items) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'cash_shop_buy',
 		kafra_points => $kafra_points,
 		count => scalar @{$items},
@@ -1176,7 +1181,7 @@ sub reconstruct_cash_shop_buy {
 
 sub sendShowEquipPlayer {
 	my ($self, $ID) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 				switch => 'view_player_equip_request',
 				ID => $ID
 			}
@@ -1198,7 +1203,7 @@ sub sendShowEquipPlayer {
 sub sendMiscConfigSet {
 	my ($self, $type, $flag) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 				switch => 'misc_config_set',
 				type => $type,
 				flag => $flag
@@ -1214,7 +1219,7 @@ sub sendSlaveAttack {
 	my $slaveID = shift;
 	my $targetID = shift;
 	my $flag = shift;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 				switch => 'slave_attack',
 				slaveID => $slaveID,
 				targetID => $targetID,
@@ -1228,7 +1233,7 @@ sub sendSlaveAttack {
 sub sendSlaveStandBy {
 	my $self = shift;
 	my $slaveID = shift;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 				switch => 'slave_move_to_master',
 				slaveID => $slaveID
 			}
@@ -1242,7 +1247,7 @@ sub sendSlaveStandBy {
 # 0998 <index>.W <position>.L (CZ_REQ_WEAR_EQUIP_V5)
 sub sendEquip {
 	my ($self, $ID, $type) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 				switch => 'send_equip',
 				ID => $ID,
 				type => $type
@@ -1257,7 +1262,7 @@ sub sendEquip {
 sub sendEquipSwitchAdd {
 	my ($self, $ID, $position) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'equip_switch_add',
 		ID => $ID,
 		position => $position,
@@ -1272,7 +1277,7 @@ sub sendEquipSwitchAdd {
 sub sendEquipSwitchRemove {
 	my ($self, $ID, $position) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'equip_switch_remove',
 		ID => $ID,
 		position =>  $position,
@@ -1286,7 +1291,7 @@ sub sendEquipSwitchRemove {
 sub sendEquipSwitchRun {
 	my ($self) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'equip_switch_run'
 	}));
 
@@ -1298,7 +1303,7 @@ sub sendEquipSwitchRun {
 sub sendEquipSwitchSingle {
 	my ($self, $ID) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'equip_switch_single',
 		ID => $ID
 	}));
@@ -1309,14 +1314,14 @@ sub sendEquipSwitchSingle {
 sub sendProgress {
 	my ($self) = @_;
 
-	$self->sendToServer($self->reconstruct({switch => 'notify_progress_bar_complete'}));
+	$self->dontSendToServer($self->reconstruct({switch => 'notify_progress_bar_complete'}));
 
 	debug "Sent Progress Bar Finish\n", "sendPacket", 2;
 }
 
 sub sendDealAddItem {
 	my ($self, $ID, $amount) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'deal_item_add',
 		ID => $ID,
 		amount => $amount
@@ -1338,7 +1343,7 @@ sub sendDealAddItem {
 sub sendItemListWindowSelected {
 	my ($self, $num, $type, $act, $items) = @_;
 	my $len = ($num * 4) + 12;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'item_list_window_selected',
 		len => $len,
 		type => $type,
@@ -1364,7 +1369,7 @@ sub reconstruct_item_list_window_selected {
 # @author [Cydh]
 sub sendRefineUISelect {
 	my ($self, $itemIndex) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'refineui_select',
 		index => $itemIndex,
 	}));
@@ -1379,7 +1384,7 @@ sub sendRefineUISelect {
 # @author [Cydh]
 sub sendRefineUIRefine {
 	my ($self, $itemIndex, $materialNameID, $useCatalyst) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'refineui_refine',
 		index => $itemIndex,
 		catalyst => $materialNameID,
@@ -1393,7 +1398,7 @@ sub sendRefineUIRefine {
 # @author [Cydh]
 sub sendRefineUIClose {
 	my $self = shift;
-	$self->sendToServer($self->reconstruct({switch => 'refineui_close'}));
+	$self->dontSendToServer($self->reconstruct({switch => 'refineui_close'}));
 	debug "Closing RefineUI\n", "sendPacket";
 }
 
@@ -1422,7 +1427,7 @@ sub sendTokenToServer {
 		token => $token,
 	});
 
-	$self->sendToServer($msg);
+	$self->dontSendToServer($msg);
 
 	debug "Sent sendTokenLogin\n", "sendPacket", 2;
 }
@@ -1451,7 +1456,7 @@ sub sendReqRemainTime {
 		switch => 'request_remain_time',
 	});
 
-	$self->sendToServer($msg);
+	$self->dontSendToServer($msg);
 }
 
 sub sendBlockingPlayerCancel {
@@ -1462,13 +1467,13 @@ sub sendBlockingPlayerCancel {
 		switch => 'blocking_play_cancel',
 	});
 
-	$self->sendToServer($msg);
+	$self->dontSendToServer($msg);
 }
 
 
 sub rodex_delete_mail {
 	my ($self, $type, $mailID1, $mailID2) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'rodex_delete_mail',
 		type => $type,
 		mailID1 => $mailID1,
@@ -1478,7 +1483,7 @@ sub rodex_delete_mail {
 
 sub rodex_request_zeny {
 	my ($self, $mailID1, $mailID2, $type) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'rodex_request_zeny',
 		mailID1 => $mailID1,
 		mailID2 => $mailID2,
@@ -1488,7 +1493,7 @@ sub rodex_request_zeny {
 
 sub rodex_request_items {
 	my ($self, $mailID1, $mailID2, $type) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'rodex_request_items',
 		mailID1 => $mailID1,
 		mailID2 => $mailID2,
@@ -1498,7 +1503,7 @@ sub rodex_request_items {
 
 sub rodex_cancel_write_mail {
 	my ($self) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'rodex_cancel_write_mail',
 	}));
 	undef $rodexWrite;
@@ -1506,7 +1511,7 @@ sub rodex_cancel_write_mail {
 
 sub rodex_add_item {
 	my ($self, $ID, $amount) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'rodex_add_item',
 		ID => $ID,
 		amount => $amount,
@@ -1515,7 +1520,7 @@ sub rodex_add_item {
 
 sub rodex_remove_item {
 	my ($self, $ID, $amount) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'rodex_remove_item',
 		ID => $ID,
 		amount => $amount,
@@ -1524,7 +1529,7 @@ sub rodex_remove_item {
 
 sub rodex_open_write_mail {
 	my ($self, $name) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'rodex_open_write_mail',
 		name => stringToBytes($name),
 	}));
@@ -1532,7 +1537,7 @@ sub rodex_open_write_mail {
 
 sub rodex_checkname {
 	my ($self, $name) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'rodex_checkname',
 		name => stringToBytes($name),
 	}));
@@ -1558,12 +1563,12 @@ sub rodex_send_mail {
 		body => $body,
 	});
 
-	$self->sendToServer($pack);
+	$self->dontSendToServer($pack);
 }
 
 sub rodex_refresh_maillist {
 	my ($self, $type, $mailID1, $mailID2) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'rodex_refresh_maillist',
 		type => $type,
 		mailID1 => $mailID1,
@@ -1578,7 +1583,7 @@ sub rodex_refresh_maillist {
 
 sub rodex_read_mail {
 	my ($self, $type, $mailID1, $mailID2) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'rodex_read_mail',
 		type => $type,
 		mailID1 => $mailID1,
@@ -1588,7 +1593,7 @@ sub rodex_read_mail {
 
 sub rodex_next_maillist {
 	my ($self, $type, $mailID1, $mailID2) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'rodex_next_maillist',
 		type => $type,
 		mailID1 => $mailID1,
@@ -1598,7 +1603,7 @@ sub rodex_next_maillist {
 
 sub rodex_open_mailbox {
 	my ($self, $type, $mailID1, $mailID2) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'rodex_open_mailbox',
 		type => $type,
 		mailID1 => $mailID1,
@@ -1613,7 +1618,7 @@ sub rodex_open_mailbox {
 
 sub rodex_close_mailbox {
 	my ($self) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'rodex_close_mailbox',
 	}));
 	undef $rodexList;
@@ -1621,7 +1626,7 @@ sub rodex_close_mailbox {
 
 sub sendEnteringVender {
     my ($self, $accountID) = @_;
-    $self->sendToServer($self->reconstruct({
+    $self->dontSendToServer($self->reconstruct({
         switch => 'send_entering_vending',
         accountID => $accountID,
     }));
@@ -1629,7 +1634,7 @@ sub sendEnteringVender {
 
 sub sendUnequip {
     my ($self, $ID) = @_;
-    $self->sendToServer($self->reconstruct({
+    $self->dontSendToServer($self->reconstruct({
         switch => 'send_unequip_item',
         ID => $ID,
     }));
@@ -1637,7 +1642,7 @@ sub sendUnequip {
 
 sub sendAddStatusPoint {
     my ($self, $ID,$Amount) = @_;
-    $self->sendToServer($self->reconstruct({
+    $self->dontSendToServer($self->reconstruct({
         switch => 'send_add_status_point',
         statusID => $ID,
         Amount => '1',
@@ -1646,7 +1651,7 @@ sub sendAddStatusPoint {
 
 sub sendAddSkillPoint {
     my ($self, $skillID) = @_;
-    $self->sendToServer($self->reconstruct({
+    $self->dontSendToServer($self->reconstruct({
         switch => 'send_add_skill_point',
         skillID => $skillID,
     }));
@@ -1655,7 +1660,7 @@ sub sendAddSkillPoint {
 sub sendHotKeyChange {
 	my ($self, $args) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'hotkey_change',
 		idx => $args->{idx},
 		type => $args->{type},
@@ -1666,7 +1671,7 @@ sub sendHotKeyChange {
 
 sub sendQuestState {
     my ($self, $questID,$state) = @_;
-    $self->sendToServer($self->reconstruct({
+    $self->dontSendToServer($self->reconstruct({
         switch => 'send_quest_state',
         questID => $questID,
         state => $state, #TODO:[active=0x00],[inactive=0x01]
@@ -1677,12 +1682,12 @@ sub sendQuestState {
 sub sendClanChat {
     my ($self, $message) = @_;
 	$message = $char->{name}." : ".$message;
-    $self->sendToServer($self->reconstruct({switch => 'clan_chat', len => length($message) + 4,message => $message}));
+    $self->dontSendToServer($self->reconstruct({switch => 'clan_chat', len => length($message) + 4,message => $message}));
 }
 
 sub sendchangetitle {
     my ($self, $title_id) = @_;
-    $self->sendToServer($self->reconstruct({
+    $self->dontSendToServer($self->reconstruct({
         switch => 'send_change_title',
         ID => $title_id,
     }));
@@ -1691,7 +1696,7 @@ sub sendchangetitle {
 
 sub sendRecallSso {
 	my ($self, $accountID) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'recall_sso',
 		ID => $accountID,
 	}));
@@ -1699,7 +1704,7 @@ sub sendRecallSso {
 
 sub sendRemoveAidSso {
 	my ($self, $accountID) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'remove_aid_sso',
 		ID => $accountID,
 	}));
@@ -1707,21 +1712,21 @@ sub sendRemoveAidSso {
 
 sub sendMacroStart {
 	my ($self) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'macro_start',
 	}));
 }
 
 sub sendMacroStop {
 	my ($self) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'macro_stop',
 	}));
 }
 
 sub sendReqCashTabCode {
 	my ($self, $tabID) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'req_cash_tabcode',
 		ID => $tabID,
 	}));
@@ -1739,7 +1744,7 @@ sub reconstruct_pet_evolution {
 
 sub sendPetEvolution {
 	my ($self, $peteggid, $r_array) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'pet_evolution',
 		ID => $peteggid,
 		items => $r_array,
@@ -1754,14 +1759,14 @@ sub sendWeaponRefine {
 		ID => $ID,
 	});
 
-	$self->sendToServer($msg);
+	$self->dontSendToServer($msg);
 
 	debug "Sent Weapon Refine.\n", "sendPacket", 2;
 }
 
 sub sendCooking {
 	my ($self, $type, $nameID) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'cook_request',
 		nameID => $nameID,
 		type => $type,
@@ -1771,7 +1776,7 @@ sub sendCooking {
 
 sub sendMakeItemRequest {
 	my ($self, $nameID, $material_nameID1, $material_nameID2, $material_nameID3) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'make_item_request',
 		nameID => $nameID,
 		material_nameID1 => $material_nameID1,
@@ -1784,7 +1789,7 @@ sub sendMakeItemRequest {
 sub sendSearchStoreClose {
 	my ($self, $args) = @_;
 
-	$self->sendToServer($self->reconstruct({switch => 'search_store_close'}));
+	$self->dontSendToServer($self->reconstruct({switch => 'search_store_close'}));
 
 	$universalCatalog{open} = 0;
 
@@ -1794,7 +1799,7 @@ sub sendSearchStoreClose {
 sub sendSearchStoreSearch {
 	my ($self, $args) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'search_store_info',
 		type => $args->{type},
 		max_price => $args->{max_price},
@@ -1820,7 +1825,7 @@ sub reconstruct_search_store_info {
 sub sendSearchStoreRequestNextPage {
 	my ($self, $args) = @_;
 
-	$self->sendToServer($self->reconstruct({switch => 'search_store_request_next_page'}));
+	$self->dontSendToServer($self->reconstruct({switch => 'search_store_request_next_page'}));
 
 	debug "Sent search store next page request\n", "sendPacket", 2;
 }
@@ -1828,7 +1833,7 @@ sub sendSearchStoreRequestNextPage {
 sub sendSearchStoreSelect {
 	my ($self, $args) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'search_store_select',
 		accountID => $args->{accountID},
 		storeID => $args->{storeID},
@@ -1841,7 +1846,7 @@ sub sendSearchStoreSelect {
 sub sendNoviceDoriDori {
 	my ($self, $args) = @_;
 
-	$self->sendToServer($self->reconstruct({switch => 'novice_dori_dori'}));
+	$self->dontSendToServer($self->reconstruct({switch => 'novice_dori_dori'}));
 
 	debug "Sent Novice Dori Dori\n", "sendPacket", 2;
 }
@@ -1849,7 +1854,7 @@ sub sendNoviceDoriDori {
 sub sendChangeDress {
 	my ($self, $args) = @_;
 
-	$self->sendToServer($self->reconstruct({switch => 'change_dress'}));
+	$self->dontSendToServer($self->reconstruct({switch => 'change_dress'}));
 
 	debug "Sent Change Dress\n", "sendPacket", 2;
 }
@@ -1857,7 +1862,7 @@ sub sendChangeDress {
 sub sendFriendRemove {
 	my ($self, $accountID, $charID) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'friend_remove',
 		accountID => $accountID,
 		charID => $charID,
@@ -1869,7 +1874,7 @@ sub sendFriendRemove {
 sub sendRepairItem {
 	my ($self, $args) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'repair_item',
 		index => $args->{index},
 		nameID => $args->{nameID},
@@ -1882,7 +1887,7 @@ sub sendRepairItem {
 sub sendAdoptRequest {
 	my ($self, $ID) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'adopt_request',
 		ID => $ID,
 	}));
@@ -1893,7 +1898,7 @@ sub sendAdoptRequest {
 sub sendAdoptReply {
 	my ($self, $parentID1, $parentID2, $result) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'adopt_reply_request',
 		parentID1 => $parentID1,
 		parentID2 => $parentID2,
@@ -1906,7 +1911,7 @@ sub sendAdoptReply {
 sub sendPrivateAirshipRequest {
 	my ($self, $map_name, $nameID) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'private_airship_request',
 		map_name => stringToBytes($map_name),
 		nameID => $nameID,
@@ -1916,7 +1921,7 @@ sub sendPrivateAirshipRequest {
 sub sendNoviceExplosionSpirits {
 	my ($self) = @_;
 
-	$self->sendToServer($self->reconstruct({switch => 'novice_explosion_spirits'}));
+	$self->dontSendToServer($self->reconstruct({switch => 'novice_explosion_spirits'}));
 
 	debug "Sent Novice Explosion Spirits\n", "sendPacket", 2;
 }
@@ -1924,7 +1929,7 @@ sub sendNoviceExplosionSpirits {
 sub sendBanCheck {
 	my ($self, $ID) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'ban_check',
 		accountID => $ID,
 	}));
@@ -1936,7 +1941,7 @@ sub sendChangeCart {
 	my ($self, $lvl) = @_;
 
 	# lvl: 1..5
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'change_cart',
 		lvl => $lvl,
 	}));
@@ -1947,7 +1952,7 @@ sub sendChangeCart {
 sub sendArrowCraft {
 	my ($self, $nameID) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'make_arrow',
 		nameID => $nameID,
 	}));
@@ -1958,7 +1963,7 @@ sub sendArrowCraft {
 sub sendAutoSpell {
 	my ($self, $ID) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'auto_spell',
 		ID => $ID,
 	}));
@@ -1967,7 +1972,7 @@ sub sendAutoSpell {
 sub sendEmotion {
 	my ($self, $ID) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'send_emotion',
 		ID => $ID,
 	}));
@@ -1978,7 +1983,7 @@ sub sendEmotion {
 sub sendWho {
 	my ($self) = @_;
 
-	$self->sendToServer($self->reconstruct({switch => 'request_user_count'}));
+	$self->dontSendToServer($self->reconstruct({switch => 'request_user_count'}));
 	debug "Sent Who (User Count)\n", "sendPacket", 2;
 }
 
@@ -1987,7 +1992,7 @@ sub sendNPCBuySellList {
 
 	# type: 0 get store list
 	# type: 1 get sell list
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'request_buy_sell_list',
 		ID => $ID,
 		type => $type,
@@ -2001,7 +2006,7 @@ sub sendIgnore {
 
 	my $nameToBytes = stringToBytes($name);
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'ignore_player',
 		name => $nameToBytes,
 		flag => $flag,
@@ -2013,7 +2018,7 @@ sub sendIgnore {
 sub sendIgnoreAll {
 	my ($self, $flag) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'ignore_all',
 		flag => $flag,
 	}));
@@ -2024,7 +2029,7 @@ sub sendIgnoreAll {
 sub sendGetIgnoreList {
 	my ($self) = @_;
 
-	$self->sendToServer($self->reconstruct({switch => 'get_ignore_list'}));
+	$self->dontSendToServer($self->reconstruct({switch => 'get_ignore_list'}));
 
 	debug "Sent get Ignore List.\n", "sendPacket", 2;
 }
@@ -2032,7 +2037,7 @@ sub sendGetIgnoreList {
 sub sendChatRoomCreate {
 	my ($self, $title, $limit, $public, $password) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'chat_room_create',
 		limit => $limit,
 		public => $public,
@@ -2046,7 +2051,7 @@ sub sendChatRoomCreate {
 sub sendChatRoomJoin {
 	my ($self, $ID, $password) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'chat_room_join',
 		ID => $ID,
 		password => stringToBytes($password),
@@ -2058,7 +2063,7 @@ sub sendChatRoomJoin {
 sub sendChatRoomChange {
 	my ($self, $title, $limit, $public, $password) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'chat_room_change',
 		limit => $limit,
 		public => $public,
@@ -2072,7 +2077,7 @@ sub sendChatRoomChange {
 sub sendChatRoomBestow {
 	my ($self, $name) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'chat_room_bestow',
 		name => stringToBytes($name),
 
@@ -2096,7 +2101,7 @@ sub sendChatRoomBestow {
 sub sendChatRoomKick {
 	my ($self, $name) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'chat_room_kick',
 		name => stringToBytes($name),
 	}));
@@ -2107,7 +2112,7 @@ sub sendChatRoomKick {
 sub sendChatRoomLeave {
 	my ($self) = @_;
 
-	$self->sendToServer($self->reconstruct({switch => 'chat_room_leave'}));
+	$self->dontSendToServer($self->reconstruct({switch => 'chat_room_leave'}));
 
 	debug "Sent Leave Chat Room\n", "sendPacket", 2;
 }
@@ -2115,7 +2120,7 @@ sub sendChatRoomLeave {
 sub sendDeal {
 	my ($self, $ID) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'deal_initiate',
 		ID => $ID,
 	}));
@@ -2126,7 +2131,7 @@ sub sendDeal {
 sub sendDealReply {
 	my ($self, $action) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'deal_reply',
 
 		# Action values:
@@ -2147,7 +2152,7 @@ sub sendDealReply {
 sub sendDealFinalize {
 	my ($self) = @_;
 
-	$self->sendToServer($self->reconstruct({switch => 'deal_finalize'}));
+	$self->dontSendToServer($self->reconstruct({switch => 'deal_finalize'}));
 
 	debug "Sent Deal Finalize\n", "sendPacket", 2;
 }
@@ -2155,7 +2160,7 @@ sub sendDealFinalize {
 sub sendCurrentDealCancel {
 	my ($self) = @_;
 
-	$self->sendToServer($self->reconstruct({switch => 'deal_cancel'}));
+	$self->dontSendToServer($self->reconstruct({switch => 'deal_cancel'}));
 
 	debug "Sent Cancel Current Deal\n", "sendPacket", 2;
 }
@@ -2163,7 +2168,7 @@ sub sendCurrentDealCancel {
 sub sendDealTrade {
 	my ($self) = @_;
 
-	$self->sendToServer($self->reconstruct({switch => 'deal_trade'}));
+	$self->dontSendToServer($self->reconstruct({switch => 'deal_trade'}));
 
 	debug "Sent Deal Trade\n", "sendPacket", 2;
 }
@@ -2171,7 +2176,7 @@ sub sendDealTrade {
 sub sendStorageClose {
 	my ($self) = @_;
 
-	$self->sendToServer($self->reconstruct({switch => 'storage_close'}));
+	$self->dontSendToServer($self->reconstruct({switch => 'storage_close'}));
 
 	debug "Sent Storage Close\n", "sendPacket", 2;
 }
@@ -2179,7 +2184,7 @@ sub sendStorageClose {
 sub sendPartyJoinRequest {
 	my ($self, $ID) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'party_join_request',
 		ID => $ID,
 	}));
@@ -2190,7 +2195,7 @@ sub sendPartyJoinRequest {
 sub sendPartyJoin {
 	my ($self, $ID, $flag) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'party_join',
 		ID => $ID,
 		flag => $flag,
@@ -2202,7 +2207,7 @@ sub sendPartyJoin {
 sub sendPartyLeave {
 	my ($self) = @_;
 
-	$self->sendToServer($self->reconstruct({switch => 'party_leave'}));
+	$self->dontSendToServer($self->reconstruct({switch => 'party_leave'}));
 
 	debug "Sent Party Leave\n", "sendPacket", 2;
 }
@@ -2210,7 +2215,7 @@ sub sendPartyLeave {
 sub sendPartyKick {
 	my ($self, $ID, $name) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'party_kick',
 		ID => $ID,
 		name => stringToBytes($name),
@@ -2222,7 +2227,7 @@ sub sendPartyKick {
 sub sendMemo {
 	my ($self) = @_;
 
-	$self->sendToServer($self->reconstruct({switch => 'memo_request'}));
+	$self->dontSendToServer($self->reconstruct({switch => 'memo_request'}));
 
 	debug "Sent Memo\n", "sendPacket", 2;
 }
@@ -2230,7 +2235,7 @@ sub sendMemo {
 sub sendCompanionRelease {
 	my ($self) = @_;
 
-	$self->sendToServer($self->reconstruct({switch => 'companion_release'}));
+	$self->dontSendToServer($self->reconstruct({switch => 'companion_release'}));
 
 	debug "Sent Companion Release (Cart, Falcon or Pecopeco)\n", "sendPacket", 2;
 }
@@ -2238,7 +2243,7 @@ sub sendCompanionRelease {
 sub sendCartAdd {
 	my ($self, $ID, $amount) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'cart_add',
 		ID => $ID,
 		amount => $amount,
@@ -2250,7 +2255,7 @@ sub sendCartAdd {
 sub sendCartGet {
 	my ($self, $ID, $amount) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'cart_get',
 		ID => $ID,
 		amount => $amount,
@@ -2262,7 +2267,7 @@ sub sendCartGet {
 sub sendIdentify {
 	my ($self, $ID) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'identify',
 		ID => $ID,
 	}));
@@ -2273,7 +2278,7 @@ sub sendIdentify {
 sub sendCardMergeRequest {
 	my ($self, $cardID) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'card_merge_request',
 		cardID => $cardID,
 	}));
@@ -2284,7 +2289,7 @@ sub sendCardMergeRequest {
 sub sendCardMerge {
 	my ($self, $cardID, $itemID) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'card_merge',
 		cardID => $cardID,
 		itemID => $itemID,
@@ -2309,7 +2314,7 @@ sub sendCharCreate {
 	$hair_color ||= 1;
 	$hair_style ||= 0;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'char_create',
 		name => stringToBytes($name),
 		str => $str,
@@ -2331,7 +2336,7 @@ sub sendCharCreate {
 sub sendCharDelete {
 	my ($self, $charID, $email) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'char_delete',
 		charID => $charID,
 		email => stringToBytes($email),
@@ -2343,7 +2348,7 @@ sub sendCharDelete {
 sub sendGuildAlly {
 	my ($self, $ID, $flag) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'guild_alliance_reply',
 		ID => $ID,
 		flag => $flag,
@@ -2355,7 +2360,7 @@ sub sendGuildAlly {
 sub sendGuildRequestEmblem {
 	my ($self, $guildID) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'guild_emblem_request',
 		guildID => $guildID,
 	}));
@@ -2366,7 +2371,7 @@ sub sendGuildRequestEmblem {
 sub sendGuildBreak {
 	my ($self, $guildName) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'guild_break',
 		guildName => stringToBytes($guildName),
 	}));
@@ -2377,7 +2382,7 @@ sub sendGuildBreak {
 sub sendWarpTele {
 	my ($self, $skillID, $map) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'warp_select',
 		# skillID:
 		# 26 => Teleport (Respawn/Random)
@@ -2392,13 +2397,13 @@ sub sendWarpTele {
 sub sendStorageGetToCart {
 	my ($self, $ID, $amount) = @_;
 	if ($config{storageAuto_type} == 1) {
-			$self->sendToServer($self->reconstruct({
+			$self->dontSendToServer($self->reconstruct({
 			switch => 'guild_storage_to_cart',
 			ID => $ID,
 			amount => $amount,
 		}));
 	} else {
-		$self->sendToServer($self->reconstruct({
+		$self->dontSendToServer($self->reconstruct({
 			switch => 'storage_to_cart',
 			ID => $ID,
 			amount => $amount,
@@ -2411,13 +2416,13 @@ sub sendStorageGetToCart {
 sub sendStorageAddFromCart {
 	my ($self, $ID, $amount) = @_;
 	if ($config{storageAuto_type} == 1) {
-		$self->sendToServer($self->reconstruct({
+		$self->dontSendToServer($self->reconstruct({
 			switch => 'cart_to_guild_storage',
 			ID => $ID,
 			amount => $amount,
 		}));
 	} else {
-		$self->sendToServer($self->reconstruct({
+		$self->dontSendToServer($self->reconstruct({
 			switch => 'cart_to_storage',
 			ID => $ID,
 			amount => $amount,
@@ -2430,7 +2435,7 @@ sub sendStorageAddFromCart {
 sub sendHomunculusName {
 	my ($self, $name) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'homunculus_name',
 		name => stringToBytes($name),
 	}));
@@ -2441,7 +2446,7 @@ sub sendHomunculusName {
 sub sendGuildLeave {
 	my ($self, $reason, $guildID, $charID) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'guild_leave',
 		guildID => $guildID,
 		accountID => $accountID,
@@ -2455,7 +2460,7 @@ sub sendGuildLeave {
 sub sendGuildMemberKick {
 	my ($self, $guildID, $accountID, $charID, $reason) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'guild_kick',
 		guildID => $guildID,
 		charID => $charID,
@@ -2469,7 +2474,7 @@ sub sendGuildMemberKick {
 sub sendGuildCreate {
 	my ($self, $name, $charID) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'guild_create',
 		charID => $charID,
 		guildName => stringToBytes($name),
@@ -2481,7 +2486,7 @@ sub sendGuildCreate {
 sub sendGuildJoin {
 	my ($self, $ID, $flag) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'guild_join',
 		ID => $ID,
 		flag => $flag,
@@ -2493,7 +2498,7 @@ sub sendGuildJoin {
 sub sendGuildJoinRequest {
 	my ($self, $ID, $charID) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'guild_join_request',
 		ID => $ID,
 		accountID => $accountID,
@@ -2506,7 +2511,7 @@ sub sendGuildJoinRequest {
 sub sendGuildNotice {
 	my ($self, $guildID, $name, $notice) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'guild_notice',
 		guildID => $guildID,
 		name => stringToBytes($name),
@@ -2525,7 +2530,7 @@ sub sendGuildSetAlly {
 	# unless you plan to mess around with the alliance packet, no exploits though, I tried ;-)
 	# -zdivpsa
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'guild_alliance_request',
 		targetAccountID => $targetAID,
 		accountID => $myAID,
@@ -2538,7 +2543,7 @@ sub sendGuildSetAlly {
 sub sendPetCapture {
 	my ($self, $monID) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'pet_capture',
 		ID => $monID,
 	}));
@@ -2548,7 +2553,7 @@ sub sendPetCapture {
 sub sendPetMenu {
 	my ($self, $type) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'pet_menu',
 
 		# Action
@@ -2566,7 +2571,7 @@ sub sendPetMenu {
 sub sendPetHatch {
 	my ($self, $ID) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'pet_hatch',
 		ID => $ID,
 	}));
@@ -2577,7 +2582,7 @@ sub sendPetHatch {
 sub sendPetName {
 	my ($self, $name) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'pet_name',
 		name => stringToBytes($name),
 	}));
@@ -2588,7 +2593,7 @@ sub sendPetName {
 sub sendPetEmotion {
 	my ($self, $ID) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'pet_emotion',
 		ID => $ID,
 	}));
@@ -2600,7 +2605,7 @@ sub sendPetEmotion {
 sub sendBuyBulk {
 	my ($self, $r_array) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'buy_bulk',
 		items => \@{$r_array},
 	}));
@@ -2618,7 +2623,7 @@ sub reconstruct_buy_bulk {
 sub sendSellBulk {
 	my ($self, $r_array) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'sell_bulk',
 		items => \@{$r_array},
 	}));
@@ -2635,7 +2640,7 @@ sub reconstruct_sell_bulk {
 sub sendAchievementGetReward {
 	my ($self, $achievementID) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'achievement_get_reward',
 		achievementID => $achievementID,
 	}));
@@ -2645,7 +2650,7 @@ sub sendTop10Alchemist {
 	my ($self) = @_;
 
 	if (!$masterServer->{rankingSystemType}) {
-		$self->sendToServer($self->reconstruct({switch => 'rank_alchemist'}));
+		$self->dontSendToServer($self->reconstruct({switch => 'rank_alchemist'}));
 	} else {
 		$self->sendTop10(1);
 	}
@@ -2657,7 +2662,7 @@ sub sendTop10Blacksmith {
 	my ($self) = @_;
 
 	if (!$masterServer->{rankingSystemType}) {
-		$self->sendToServer($self->reconstruct({switch => 'rank_blacksmith'}));
+		$self->dontSendToServer($self->reconstruct({switch => 'rank_blacksmith'}));
 	} else {
 		$self->sendTop10(0);
 	}
@@ -2669,7 +2674,7 @@ sub sendTop10PK {
 	my ($self) = @_;
 
 	if (!$masterServer->{rankingSystemType}) {
-		$self->sendToServer($self->reconstruct({switch => 'rank_killer'}));
+		$self->dontSendToServer($self->reconstruct({switch => 'rank_killer'}));
 	} else {
 		$self->sendTop10(3);
 	}
@@ -2681,7 +2686,7 @@ sub sendTop10Taekwon {
 	my ($self) = @_;
 
 	if (!$masterServer->{rankingSystemType}) {
-		$self->sendToServer($self->reconstruct({switch => 'rank_taekwon'}));
+		$self->dontSendToServer($self->reconstruct({switch => 'rank_taekwon'}));
 	} else {
 		$self->sendTop10(2);
 	}
@@ -2692,7 +2697,7 @@ sub sendTop10Taekwon {
 sub sendTop10 {
 	my ($self, $type) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'rank_general',
 
 		# Type:
@@ -2707,7 +2712,7 @@ sub sendTop10 {
 sub sendGMSummon {
 	my ($self, $playerName) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'gm_summon_player',
 		playerName => stringToBytes($playerName),
 	}));
@@ -2716,7 +2721,7 @@ sub sendGMSummon {
 sub sendGMBroadcast {
 	my ($self, $message) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'gm_broadcast',
 
 		# to colorize, add in front of message: micc | ssss | blue | tool ?
@@ -2727,7 +2732,7 @@ sub sendGMBroadcast {
 sub sendGMKick {
 	my ($self, $accountID) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'gm_kick',
 		targetAccountID => $accountID,
 	}));
@@ -2736,13 +2741,13 @@ sub sendGMKick {
 sub sendGMKickAll {
 	my ($self) = @_;
 
-	$self->sendToServer($self->reconstruct({switch => 'gm_kick_all'}));
+	$self->dontSendToServer($self->reconstruct({switch => 'gm_kick_all'}));
 }
 
 sub sendGMMonsterItem {
 	my ($self, $name) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'gm_item_mob_create',
 		name => stringToBytes($name),
 	}));
@@ -2751,7 +2756,7 @@ sub sendGMMonsterItem {
 sub sendGMMapMove {
 	my ($self, $name, $x, $y) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'gm_move_to_map',
 		mapName => stringToBytes($name),
 		x => $x,
@@ -2762,7 +2767,7 @@ sub sendGMMapMove {
 sub sendGMResetStateSkill {
 	my ($self, $type) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'gm_reset_state_skill',
 
 		# type
@@ -2777,7 +2782,7 @@ sub sendGMResetStateSkill {
 sub sendGMChangeMapType {
 	my ($self, $x, $y, $type) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'gm_change_cell_type',
 		x => $x,
 		y => $y,
@@ -2794,7 +2799,7 @@ sub sendGMChangeMapType {
 sub sendGMBroadcastLocal {
 	my ($self, $message) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'gm_broadcast_local',
 		message => stringToBytes($message),
 	}));
@@ -2803,7 +2808,7 @@ sub sendGMBroadcastLocal {
 sub sendGMChangeEffectState {
 	my ($self, $effect_state) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'gm_change_effect_state',
 		effect_state => $effect_state
 	}));
@@ -2814,7 +2819,7 @@ sub sendGMChangeEffectState {
 sub sendGMRemove {
 	my ($self, $playerName) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'gm_remove',
 		playerName => stringToBytes($playerName),
 	}));
@@ -2823,7 +2828,7 @@ sub sendGMRemove {
 sub sendGMShift {
 	my ($self, $playerName) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'gm_shift',
 		playerName => stringToBytes($playerName),
 	}));
@@ -2832,7 +2837,7 @@ sub sendGMShift {
 sub sendGMRecall {
 	my ($self, $playerName) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'gm_recall',
 		playerName => stringToBytes($playerName),
 	}));
@@ -2841,7 +2846,7 @@ sub sendGMRecall {
 sub sendAlignment {
 	my ($self, $ID, $alignment, $point) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'alignment',
 		targetID => $ID,
 		type => $alignment,
@@ -2854,7 +2859,7 @@ sub sendAlignment {
 sub sendOpenShop {
 	my ($self, $title, $items) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'shop_open',
 		title => stringToBytes($title),
 		result => 1,
@@ -2871,7 +2876,7 @@ sub reconstruct_shop_open {
 sub sendMailboxOpen {
 	my ($self) = @_;
 
-	$self->sendToServer($self->reconstruct({switch => 'mailbox_open'}));
+	$self->dontSendToServer($self->reconstruct({switch => 'mailbox_open'}));
 
 	debug "Sent mailbox open.\n", "sendPacket", 2;
 }
@@ -2879,7 +2884,7 @@ sub sendMailboxOpen {
 sub sendMailRead {
 	my ($self, $mailID) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'mail_read',
 		mailID => $mailID,
 	}));
@@ -2890,7 +2895,7 @@ sub sendMailRead {
 sub sendMailDelete {
 	my ($self, $mailID) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'mail_delete',
 		mailID => $mailID,
 	}));
@@ -2901,7 +2906,7 @@ sub sendMailDelete {
 sub sendMailGetAttach {
 	my ($self, $mailID) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'mail_attachment_get',
 		mailID => $mailID,
 	}));
@@ -2912,7 +2917,7 @@ sub sendMailGetAttach {
 sub sendMailOperateWindow {
 	my ($self, $flag) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'mail_remove',
 		flag => $flag,
 	}));
@@ -2932,7 +2937,7 @@ sub sendMailSetAttach {
 	}
 
 	$AI::temp::mailAttachAmount = $amount;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'mail_attachment_set',
 		ID => $ID,
 		amount => $amount,
@@ -2944,7 +2949,7 @@ sub sendMailSetAttach {
 sub sendMailSend {
 	my ($self, $receiver, $title, $message) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'mail_send',
 		recipient => stringToBytes($receiver),
 		title => stringToBytes($title),
@@ -2964,7 +2969,7 @@ sub reconstruct_mail_send {
 sub sendMailReturn {
 	my ($self, $mailID, $sender) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'mail_return',
 		mailID => $mailID,
 		sender => $sender,
@@ -2978,7 +2983,7 @@ sub sendAuctionAddItemCancel {
 
 	$flag ||= 1;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'auction_add_item_cancel',
 		flag => $flag,
 	}));
@@ -2989,7 +2994,7 @@ sub sendAuctionAddItemCancel {
 sub sendAuctionAddItem {
 	my ($self, $ID, $amount) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'auction_add_item',
 		ID => $ID,
 		amount => $amount,
@@ -3001,7 +3006,7 @@ sub sendAuctionAddItem {
 sub sendAuctionCreate {
 	my ($self, $now_price, $max_price, $delete_time) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'auction_create',
 		now_price => $now_price,
 		max_price => $max_price,
@@ -3014,7 +3019,7 @@ sub sendAuctionCreate {
 sub sendAuctionCancel {
 	my ($self, $ID) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'auction_cancel',
 		ID => $ID,
 	}));
@@ -3025,7 +3030,7 @@ sub sendAuctionCancel {
 sub sendAuctionBuy {
 	my ($self, $ID, $price) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'auction_buy',
 		ID => $ID,
 		price => $price,
@@ -3038,7 +3043,7 @@ sub sendAuctionItemSearch {
 	my ($self, $type, $price, $search_string, $page) = @_;
 	$page ||= 1;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'auction_search',
 		price => $price,
 		search_string => stringToBytes($search_string),
@@ -3060,7 +3065,7 @@ sub sendAuctionItemSearch {
 sub sendAuctionReqMyInfo {
 	my ($self, $type) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'auction_info_self',
 		type => $type,
 	}));
@@ -3071,7 +3076,7 @@ sub sendAuctionReqMyInfo {
 sub sendAuctionMySellStop {
 	my ($self, $ID) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'auction_sell_stop',
 		ID => $ID,
 	}));
@@ -3082,7 +3087,7 @@ sub sendAuctionMySellStop {
 sub sendPartyJoinRequestByNameReply {
 	my ($self, $accountID, $flag) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'party_join_request_by_name_reply',
 		accountID => $accountID,
 		flag => $flag,
@@ -3094,7 +3099,7 @@ sub sendPartyJoinRequestByNameReply {
 sub sendAutoRevive {
 	my ($self) = @_;
 
-	$self->sendToServer($self->reconstruct({switch => 'auto_revive'}));
+	$self->dontSendToServer($self->reconstruct({switch => 'auto_revive'}));
 
 	debug "Sent Auto Revive.\n", "sendPacket", 2;
 }
@@ -3102,7 +3107,7 @@ sub sendAutoRevive {
 sub sendBattlegroundChat {
 	my ($self, $message) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'battleground_chat',
 		message => ($masterServer->{chatLangCode}) ? stringToBytes("|00" . $message) : stringToBytes($message),
 	}));
@@ -3113,7 +3118,7 @@ sub sendBattlegroundChat {
 sub sendMercenaryCommand {
 	my ($self, $command) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'mercenary_command',
 
 		# 0x0 => COMMAND_REQ_NONE
@@ -3128,7 +3133,7 @@ sub sendMercenaryCommand {
 sub sendSkillUseLocInfo {
 	my ($self, $ID, $lvl, $x, $y, $moreinfo) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'skill_use_location_text',
 		lvl => $lvl,
 		ID => $ID,
@@ -3143,7 +3148,7 @@ sub sendSkillUseLocInfo {
 sub sendGMGiveMannerByName {
 	my ($self, $playerName) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'manner_by_name',
 		playerName => stringToBytes($playerName),
 	}));
@@ -3152,7 +3157,7 @@ sub sendGMGiveMannerByName {
 sub sendGMRequestStatus {
 	my ($self, $playerName) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'gm_request_status',
 		playerName => stringToBytes($playerName),
 	}));
@@ -3161,7 +3166,7 @@ sub sendGMRequestStatus {
 sub sendFeelSaveOk {
 	my ($self, $flag) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'starplace_agree',
 		flag => $flag,
 	}));
@@ -3172,7 +3177,7 @@ sub sendFeelSaveOk {
 sub sendGMReqAccName {
 	my ($self, $targetID) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'gm_request_account_name',
 		targetID => $targetID,
 	}));
@@ -3183,7 +3188,7 @@ sub sendGMReqAccName {
 sub sendClientVersion {
 	my ($self, $version) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'client_version',
 		clientVersion => $version,
 	}));
@@ -3192,7 +3197,7 @@ sub sendClientVersion {
 sub sendCaptchaAnswer {
 	my ($self, $answer) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'captcha_answer',
 		accountID => $accountID,
 		answer => $answer,
@@ -3212,7 +3217,7 @@ sub sendCashShopBuy {
 	if (scalar @{$items}) {
 		debug sprintf("Sent buying request from cashshop for %d items.\n", scalar @{$items}), "sendPacket", 2;
 		foreach my $item (@{$items}) {
-			$self->sendToServer($self->reconstruct({
+			$self->dontSendToServer($self->reconstruct({
 				switch => 'cash_dealer_buy',
 				itemid => $item->{itemID},
 				amount => $item->{amount},
@@ -3226,7 +3231,7 @@ sub sendStartSkillUse {
 	my ($self, $ID, $lv, $targetID) = @_;
 	$char->{last_skill_used_is_continuous} = 1;
 	$char->{last_continuous_skill_used} = $ID;
-	$self->sendToServer($self->reconstruct({switch => 'start_skill_use', lv => $lv, skillID => $ID, targetID => $targetID}));
+	$self->dontSendToServer($self->reconstruct({switch => 'start_skill_use', lv => $lv, skillID => $ID, targetID => $targetID}));
 	debug "Start Skill Use: $ID\n", "sendPacket", 2;
 }
 
@@ -3234,7 +3239,7 @@ sub sendStopSkillUse {
 	my ($self, $ID) = @_;
 	$char->{last_skill_used_is_continuous} = 0;
 	$char->{last_continuous_skill_used} = 0;
-	$self->sendToServer($self->reconstruct({switch => 'stop_skill_use',skillID => $ID}));
+	$self->dontSendToServer($self->reconstruct({switch => 'stop_skill_use',skillID => $ID}));
 	debug "Stop Skill Use: $ID\n", "sendPacket", 2;
 }
 
@@ -3246,7 +3251,7 @@ sub sendStopSkillUse {
 sub sendMergeItemRequest {
 	my ($self, $num, $items) = @_;
 	#my $len = ($num * 4) + 12;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'merge_item_request',
 		#len => $len,
 		items => $items,
@@ -3266,7 +3271,7 @@ sub reconstruct_merge_item_request {
 ##
 sub sendMergeItemCancel {
 	my ($self, $args) = @_;
-	$self->sendToServer($self->reconstruct({ switch => 'merge_item_cancel' }));
+	$self->dontSendToServer($self->reconstruct({ switch => 'merge_item_cancel' }));
 	debug "Cancel Merge item\n", "sendPacket";
 	$mergeItemList = {};
 }
@@ -3277,7 +3282,7 @@ sub sendMergeItemCancel {
 
 sub sendStylistChange {
 	my ($self, $hair_color, $hair_style, $cloth_color, $head_top, $head_mid, $head_bottom ) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'stylist_change',
 		hair_color => $hair_color,
 		hair_style => $hair_style,
@@ -3297,7 +3302,7 @@ sub sendStylistChange {
 sub sendOpenUIRequest {
 	my ($self, $UIType) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'open_ui_request',
 		UIType => $UIType,
 	}));
@@ -3315,7 +3320,7 @@ sub sendOpenUIRequest {
 sub sendAttendanceRewardRequest {
 	my ($self) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'attendance_reward_request',
 	}));
 
@@ -3331,7 +3336,7 @@ sub sendAttendanceRewardRequest {
 # 09AB <aid>L (PACKET_CZ_REQ_BANKING_CHECK)
 sub sendBankingCheck {
 	my ($self, $accountID) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'banking_check_request',
 		accountID => $accountID,
 	}));
@@ -3341,7 +3346,7 @@ sub sendBankingCheck {
 # 09A9 <AID>L <Money>L (PACKET_CZ_REQ_BANKING_WITHDRAW)
 sub sendBankingWithdraw {
 	my ($self, $accountID , $zeny) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'banking_withdraw_request',
 		accountID => $accountID,
 		zeny => $zeny,
@@ -3352,7 +3357,7 @@ sub sendBankingWithdraw {
 # 09A7 <AID>L <Money>L (PACKET_CZ_REQ_BANKING_DEPOSIT)
 sub sendBankingDeposit {
 	my ($self, $accountID , $zeny) = @_;
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'banking_deposit_request',
 		accountID => $accountID,
 		zeny => $zeny,
@@ -3368,7 +3373,7 @@ sub sendBankingDeposit {
 sub sendRouletteWindowOpen {
 	my ($self) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'roulette_window_open',
 	}));
 
@@ -3380,7 +3385,7 @@ sub sendRouletteWindowOpen {
 sub sendRouletteInfoRequest {
 	my ($self) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'roulette_info_request',
 	}));
 
@@ -3392,7 +3397,7 @@ sub sendRouletteInfoRequest {
 sub sendRouletteClose {
 	my ($self) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'roulette_close',
 	}));
 
@@ -3404,7 +3409,7 @@ sub sendRouletteClose {
 sub sendRouletteStart {
 	my ($self) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'roulette_start',
 	}));
 
@@ -3416,7 +3421,7 @@ sub sendRouletteStart {
 sub sendRouletteClaimPrize {
 	my ($self) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'roulette_claim_prize',
 	}));
 
@@ -3432,7 +3437,7 @@ sub sendRouletteClaimPrize {
 sub sendSellBuyComplete {
 	my ($self) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'sell_buy_complete',
 	}));
 
@@ -3444,7 +3449,7 @@ sub sendSellBuyComplete {
 sub sendBuyBulkMarket {
 	my ($self, $r_array) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'buy_bulk_market',
 		items => \@{$r_array},
 	}));
@@ -3464,7 +3469,7 @@ sub reconstruct_buy_bulk_market {
 sub sendMarketClose {
 	my ($self) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'market_close',
 	}));
 
@@ -3475,20 +3480,20 @@ sub sendMarketClose {
 # 0B14
 sub sendInventoryExpansionRequest {
 	my ($self, $args) = @_;
-	$self->sendToServer($self->reconstruct({ switch => 'inventory_expansion_request' }));
+	$self->dontSendToServer($self->reconstruct({ switch => 'inventory_expansion_request' }));
 }
 
 # Reject Inventory Expansion
 # 0B19
 sub sendInventoryExpansionRejected {
 	my ($self, $args) = @_;
-	$self->sendToServer($self->reconstruct({ switch => 'inventory_expansion_rejected' }));
+	$self->dontSendToServer($self->reconstruct({ switch => 'inventory_expansion_rejected' }));
 }
 
 # 0B1C (PACKET_CZ_PING)
 sub sendPing {
 	my ($self, $args) = @_;
-	$self->sendToServer($self->reconstruct({ switch => 'ping' }));
+	$self->dontSendToServer($self->reconstruct({ switch => 'ping' }));
 }
 
 # 0A5A - PACKET_CZ_MACRO_DETECTOR_DOWNLOAD
@@ -3496,7 +3501,7 @@ sub sendPing {
 sub sendMacroDetectorDownload {
 	my ($self) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'macro_detector_download',
 	}));
 }
@@ -3508,7 +3513,7 @@ sub sendMacroDetectorAnswer {
 
 	my $answer_bytes = stringToBytes($answer);
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'macro_detector_answer',
 		answer => $answer_bytes,
 	}));
@@ -3519,7 +3524,7 @@ sub sendMacroDetectorAnswer {
 sub sendCaptchaPreviewRequest {
 	my ($self, $captcha_key) = @_;
 
-	$self->sendToServer($self->reconstruct({
+	$self->dontSendToServer($self->reconstruct({
 		switch => 'captcha_preview_request',
 		captcha_key => $captcha_key,
 	}));
