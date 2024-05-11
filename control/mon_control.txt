@@ -57,6 +57,15 @@
 # Monsters not found in this file, or flags not specified will default to:
 # <attack> = 1
 
+gm -1 0 # some GMs like to disguise as monsters to avoid being detected.
+#gm -1 6000 # some GMs like to disguise as monsters to avoid being detected.
+
+Golem 0 0 0# high def and no desirable drops
+Megalodon 0 0 0
+Stalactic Golem 0 0 0 #too dangerous
+#Orc Archer -1 1 0
+
+
 
 ##### Eggs #####
 Ant's Egg 0 0 0
