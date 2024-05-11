@@ -347,3 +347,19 @@ dead_message RMS Test Server was closed on 2022.
 [International - iRO: Poring]
 dead 1
 dead_message iRO Transcendence was closed on 31 of March, 2022. Visit official website for more details.
+
+
+# https://www.deviruchiclub.com/seacp/
+[Devil RO]
+ip 51.79.241.153
+port 6900
+version 37
+private 1
+master_version 1
+serverType kRO_RagexeRE_2015_11_04a
+addTableFolders kRO/RagexeRE_2015_11_04a;translated;translated/kRO_english;kRO
+sendCryptKeys 0x4C17382A, 0x29961E4F, 0x7ED174C9
+serverEncoding Western
+charBlockSize 147
+gameGuard 0
+pinCode 0

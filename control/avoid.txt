@@ -23,6 +23,8 @@
 # MeloColmECA		1 0 1
 # Leileil			1 0 1
 # Angel				1 0 1
+GM Adonis           1 0 1
+GM Gebs             1 0 1
 
 [ID]
 # Same as above, but uses player IDs instead of names
