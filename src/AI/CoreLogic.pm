@@ -3412,7 +3412,8 @@ sub processAutoTeleport {
 			}
 		} else {
 			for my Actor::Player $player (@$playersList) {
-				if (!existsInList($config{teleportAuto_notPlayers}, $player->{name}) && !existsInList($config{teleportAuto_notPlayers}, $player->{nameID})) {
+				if (index($config{teleportAuto_notPlayers}, $player->{name}) == -1 && index($config{teleportAuto_notPlayers}, $player->{nameID}) == -1 && index(%friends, $player->{name}) == -1) {
+					message T("$player->{name} is not in list $config{teleportAuto_notPlayers} and not in list %friends\n"), "teleport";
 					$ok = 1;
 					last;
 				}
@@ -3576,7 +3577,14 @@ sub processAvoid {
 	}
 	foreach (@monstersID) {
 		next unless $_;
-		my $action = mon_control($monsters{$_}{name},$monsters{$_}{nameID})->{teleport_auto};
+		my $action;
+		my $lc_name = lc($monsters{$_}{name});
+		if ($lc_name != "magmaring" && index($lc_name, "gm") >= 0) {
+			$action = mon_control("gm", "gm")->{teleport_auto};
+			warning TF("Monster %s might be a disguised GM!\n", $monsters{$_}{name});
+		} else {
+			$action = mon_control($monsters{$_}{name},$monsters{$_}{nameID})->{teleport_auto};
+		}
 
 		if ($action == 3) {
 		   warning TF("Disconnecting for 30 secs to avoid %s\n", $monsters{$_}{name});
