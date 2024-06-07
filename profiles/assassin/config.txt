@@ -8,7 +8,7 @@ server 0
 username loco69
 password Maf!a3604
 loginPinCode 3604
-char 0
+char 1
 
 # Poseidon Settings: https://openkore.com/wiki/Poseidon
 # They must be the same as Query Server config in Poseidon.txt
@@ -37,7 +37,7 @@ XKore_ID
 
 # It is not advised to set secureAdminPassword if you're using Xkore 2
 secureAdminPassword 1
-adminPassword twachasa
+adminPassword wrouwiec
 callSign
 commandPrefix ;
 callSignGM 0
@@ -201,7 +201,7 @@ cartMaxWeight 7900
 itemsTakeGreed 0
 itemsCheckWeight 1
 
-lockMap gef_fild14
+lockMap prt_fild08
 lockMap_x
 lockMap_y
 lockMap_randX
@@ -259,7 +259,7 @@ sitAuto_look_from_wall
 sitTensionRelax 0
 
 statsAddAuto 1
-statsAddAuto_list 20 vit, 20 str, 20 dex, 20 agi, 50 str, 20 int, 50 vit, 70 str, 70 vit , 50 agi, 90 str, 74 vit, 28 luk
+statsAddAuto_list 9 str, 9 dex, 9 agi, 20 str, 20 dex, 80 agi, 50 str, 50 luk, 64 str, 60 luk, 74 str, 27 vit, 70 luk
 statsAddAuto_dontUseBonus 1
 statsAdd_over_99 0
 
@@ -887,61 +887,61 @@ useSelf_item {
 ######## Autostorage/autosell ########
 #602 10 1 0 # Butterfly Wing
 #601 100 1 0 # Fly Wing
-buyAuto 602 {
-	npc gonryun 152 124
-	npc_steps b
-	isMarket 0
-	standpoint
-	distance 3
-	price
-	minAmount 1
-	maxAmount 10
-	batchSize
-	onlyIdentified
-	disabled 0
-	maxBase
-	minBase
-}
-
-buyAuto 601 {
-	npc gonryun 152 124
-	npc_steps b
-	isMarket 0
-	standpoint
-	distance 3
-	price
-	minAmount 1
-	maxAmount 100
-	batchSize
-	onlyIdentified
-	disabled 0
-	maxBase
-	minBase
-}
-
-buyAuto Berserk Potion {
-	npc gonryun 152 124
-	npc_steps b
-	isMarket 0
-	standpoint
-	distance 3
-	price
-	minAmount 1
-	maxAmount 5
-	batchSize
-	onlyIdentified
-	disabled 0
-	maxBase
-	minBase
-}
-
-useSelf_item Berserk Potion {
-	onAction Attack
-	whenStatusInactive Berserk Potion
-	notWhileSitting 1
-	inInventory Berserk Potion
-	#disabled 1
-}
+#buyAuto 602 {
+#	npc gonryun 152 124
+#	npc_steps b
+#	isMarket 0
+#	standpoint
+#	distance 3
+#	price
+#	minAmount 1
+#	maxAmount 10
+#	batchSize
+#	onlyIdentified
+#	disabled 0
+#	maxBase
+#	minBase
+#}
+#
+#buyAuto 601 {
+#	npc gonryun 152 124
+#	npc_steps b
+#	isMarket 0
+#	standpoint
+#	distance 3
+#	price
+#	minAmount 1
+#	maxAmount 100
+#	batchSize
+#	onlyIdentified
+#	disabled 0
+#	maxBase
+#	minBase
+#}
+#
+#buyAuto Berserk Potion {
+#	npc gonryun 152 124
+#	npc_steps b
+#	isMarket 0
+#	standpoint
+#	distance 3
+#	price
+#	minAmount 1
+#	maxAmount 5
+#	batchSize
+#	onlyIdentified
+#	disabled 0
+#	maxBase
+#	minBase
+#}
+#
+#useSelf_item Berserk Potion {
+#	onAction Attack
+#	whenStatusInactive Berserk Potion
+#	notWhileSitting 1
+#	inInventory Berserk Potion
+#	#disabled 1
+#}
 
 sellAuto 1
 sellAuto_npc gonryun 152 124
@@ -997,43 +997,10 @@ history_max 50
 macro_orphans terminate
 
 
-useSelf_skill Crazy Uproar {
-	lvl 10
-	whenStatusInactive Crazy Uproar
-	isSelfSkill 1
-	notInTown 1
-	notWhileSitting 1
-}
-
-useSelf_skill Adrenaline Rush {
-	lvl 10
-	whenStatusInactive Adrenaline Rush
-	isSelfSkill 1
-	notInTown 1
-	notWhileSitting 1
-}
-
-
-useSelf_skill Weapon Perfection {
-	lvl 10
-	whenStatusInactive Weapon Perfection
-	isSelfSkill 1
-	notInTown 1
-	notWhileSitting 1
-}
-
-useSelf_skill Maximize Power {
-	lvl 10
-	whenStatusInactive Maximize Power
-	isSelfSkill 1
-	notInTown 1
-	notWhileSitting 1
-}
-
-useSelf_skill Power Thrust {
-	lvl 10
-	whenStatusInactive Power Thrust
-	isSelfSkill 1
-	notInTown 1
-	notWhileSitting 1
-}
+#useSelf_skill Crazy Uproar {
+#	lvl 10
+#	whenStatusInactive Crazy Uproar
+#	isSelfSkill 1
+#	notInTown 1
+#	notWhileSitting 1
+#}

@@ -223,3 +223,5 @@ gef_fild09 225 25 gef_fild10 251 371
 glast_01 377 304 glast_01 214 124
 gef_fild06 20 304 glast_01 377 304
 gef_fild10 136 331 gef_fild10 215 51
+gef_fild10 370 56 gef_fild10 27 219
+gef_fild03 18 52 gef_fild10 370 56
