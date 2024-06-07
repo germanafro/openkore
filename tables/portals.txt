@@ -16,6 +16,7 @@ geffen 128 69 prontera 155 183 r1 r0
 geffen 128 69 gonryun 163 127 r1 r10
 
 gonryun 163 127 prontera 155 183 r1 r0
+gonryun 163 127 alberta 116 57 r1 r1
 gonryun 163 127 comodo 189 148 r1 r6
 gonryun 163 127 geffen 119 59 r1 r9
 gonryun 163 127 aldebaran 140 115 r1 r2
