@@ -37,7 +37,7 @@ XKore_ID
 
 # It is not advised to set secureAdminPassword if you're using Xkore 2
 secureAdminPassword 1
-adminPassword defritwe
+adminPassword bietraid
 callSign
 commandPrefix ;
 callSignGM 0
@@ -63,10 +63,10 @@ allowedMaps
 allowedMaps_reaction 1
 
 attackAuto -1
-attackAuto_party 0
+attackAuto_party 1
 attackAuto_onlyWhenSafe 0
-attackAuto_followTarget 0
-attackAuto_inLockOnly 1
+attackAuto_followTarget 1
+attackAuto_inLockOnly 0
 attackAuto_notInTown 1
 attackAuto_notWhile_storageAuto 1
 attackAuto_notWhile_buyAuto 1
@@ -74,19 +74,19 @@ attackAuto_notWhile_sellAuto 1
 attackAuto_considerDamagedAggressive 1
 attackBeyondMaxDistance_waitForAgressive 1
 attackDistance 1
-attackDistanceAuto 1
-attackMaxDistance 1
+attackDistanceAuto
+attackMaxDistance 8
 attackMaxRouteDistance 50
 attackMaxRouteTime 4
 attackMinPlayerDistance 2
 attackMinPortalDistance 4
-attackUseWeapon 1
+attackUseWeapon 0
 attackNoGiveup 0
-attackCanSnipe 0
-attackCheckLOS 0
+attackCanSnipe 1
+attackCheckLOS 1
 attackRouteMaxPathDistance 13
-attackLooters 1
-attackLooters_dist 1
+attackLooters 0
+attackLooters_dist 0
 attackChangeTarget 1
 aggressiveAntiKS 0
 
@@ -159,7 +159,7 @@ cachePlayerNames 1
 cachePlayerNames_duration 900
 cachePlayerNames_maxSize 100
 
-clientSight 17
+clientSight 19
 
 dcPause 1
 dcOnDeath 0
@@ -181,14 +181,14 @@ follow 1
 followTarget JenniesHammer
 followEmotion 1
 followEmotion_distance 4
-followFaceDirection 0
-followDistanceMax 1
+followFaceDirection 1
+followDistanceMax 3
 followDistanceMin 1
 followLostStep 10
 followSitAuto 1
 followBot 0
 
-itemsTakeAuto 2
+itemsTakeAuto 0
 itemsTakeAuto_party 0
 itemsGatherAuto 0
 itemsGatherAuto_notInTown 0
@@ -201,7 +201,7 @@ cartMaxWeight 7900
 itemsTakeGreed 0
 itemsCheckWeight 1
 
-lockMap
+lockMap gef_fild14
 lockMap_x
 lockMap_y
 lockMap_randX
@@ -212,13 +212,13 @@ route_escape_randomWalk 1
 route_escape_shout
 route_avoidWalls 1
 route_randomWalk 1
-route_randomWalk_inTown 1
+route_randomWalk_inTown 0
 route_randomWalk_maxRouteTime 75
 route_maxWarpFee
 route_maxNpcTries 5
 route_teleport 1
 route_teleport_minDistance 75
-route_teleport_maxTries 20
+route_teleport_maxTries
 route_teleport_notInMaps
 route_step 10
 route_removeMissingPortals_NPC 1
@@ -259,7 +259,7 @@ sitAuto_look_from_wall
 sitTensionRelax 0
 
 statsAddAuto 1
-statsAddAuto_list 20 vit, 80 int, 30 dex, 80 vit
+statsAddAuto_list 20 vit, 80 int, 30 dex, 80 vit, 77 dex, 85 vit, 85 int
 statsAddAuto_dontUseBonus 1
 statsAdd_over_99 0
 
@@ -271,9 +271,9 @@ tankModeTarget
 
 teleportAuto_hp 10%
 teleportAuto_sp 0
-teleportAuto_idle 0
+teleportAuto_idle 1
 teleportAuto_portal 0
-teleportAuto_search 0
+teleportAuto_search 1
 teleportAuto_minAggressives 0
 teleportAuto_minAggressivesInLock 0
 teleportAuto_onlyWhenSafe 0
@@ -282,8 +282,8 @@ teleportAuto_maxDmgInLock 0
 teleportAuto_deadly 1
 teleportAuto_useSkill 1
 teleportAuto_useChatCommand
-teleportAuto_allPlayers 1
-teleportAuto_notPlayers SoulBlitz simplet JenniesHammer
+teleportAuto_allPlayers 0
+teleportAuto_notPlayers StepBro simplet JenniesHammer
 teleportAuto_atkCount 0
 teleportAuto_atkMiss 10
 teleportAuto_unstuck 1
@@ -345,8 +345,8 @@ logEmoticons
 logConsole 1
 logAppendUsername 1
 logAppendServer 0
-monsterLog 0
-playerLog 0
+monsterLog 1
+playerLog 1
 logDead 1
 
 questDisplayStyle 2
@@ -886,21 +886,21 @@ useSelf_item {
 
 ######## Autostorage/autosell ########
 
-#buyAuto Blue Gemstone {
-#	npc gonryun 152 124
-#	npc_steps b
-#	isMarket 0
-#	standpoint
-#	distance 3
-#	price
-#	minAmount 1
-#	maxAmount 50
-#	batchSize
-#	onlyIdentified
-#	disabled 0
-#	maxBase
-#	minBase
-#}
+buyAuto Blue Gemstone {
+	npc gonryun 152 124
+	npc_steps b
+	isMarket 0
+	standpoint
+	distance 3
+	price
+	minAmount 1
+	maxAmount 50
+	batchSize
+	onlyIdentified
+	disabled 0
+	maxBase
+	minBase
+}
 
 sellAuto 1
 sellAuto_npc gonryun 152 124
@@ -959,12 +959,11 @@ macro_orphans terminate
 useSelf_skill Heal {
 	lvl 10
 	hp < 80%
-	notInTown 1
+	notInTown 0
 }
 
 useSelf_skill PR_KYRIE {
 	lvl 10
-	aggressives 0
 	whenStatusInactive EFST_KYRIE
 	hp > 80%
 	timeout 5
@@ -1008,7 +1007,6 @@ useSelf_skill PR_MAGNIFICAT {
 	whenStatusInactive Magnificat
 	whenPartyMembersNearDist 3
 	isSelfSkill 1
-	timeout 30
 	notInTown 1
 }
 
@@ -1026,15 +1024,15 @@ useSelf_skill PR_GLORIA {
 partySkill Heal {
 	lvl 10
 	hp > 80%
-	target_hp < 60%
+	target_hp < 80%
 	target_dead 0
-	notInTown 1
 }
 
 partySkill Resurrection {
 	lvl 4
 	hp > 80%
 	target_dead 1
+	whenStatusActive EFST_KYRIE
 	notInTown 1
 }
 
@@ -1069,6 +1067,7 @@ partySkill PR_IMPOSITIO {
 	sp > 10%
 	hp > 80%
 	target_hp > 80%
+	target_isNotJob Wizard
 	notWhileSitting 1
 	notInTown 1
 	whenPartyMembersNearDist 3
@@ -1086,4 +1085,25 @@ partySkill PR_KYRIE {
 	whenPartyMembersNearDist 3
 	target_whenStatusInactive EFST_KYRIE
 	target_dead 0
+}
+
+partySkill Suffragium {
+	lvl 10
+	sp > 10%
+	hp > 80%
+	target_hp > 80%
+	target_isJob Wizard
+	notWhileSitting 1
+	notInTown 1
+	whenPartyMembersNearDist 3
+	target_whenStatusInactive Suffragium
+	target_dead 0
+}
+
+attackSkillSlot Lex Aeterna {
+	lvl 1
+	sp > 10%
+	hp > 80%
+	target_whenStatusActive
+	target_whenStatusInactive Lex Aeterna
 }

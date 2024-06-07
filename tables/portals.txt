@@ -221,7 +221,6 @@ iz_dun02 339 331 iz_dun03 32 63
 xmas_dun01 205 13 xmas_dun01 205 13
 gef_fild09 225 25 gef_fild10 251 371
 gef_fild09 225 25 gef_fild10 251 371
-pay_fild03 392 63 alberta 15 234
-alberta 15 234 pay_fild03 388 63
-pay_fild06 305 375 pay_fild03 313 16
-pay_fild03 313 16 pay_fild06 305 372
+glast_01 377 304 glast_01 214 124
+gef_fild06 20 304 glast_01 377 304
+gef_fild10 136 331 gef_fild10 215 51

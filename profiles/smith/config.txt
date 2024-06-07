@@ -37,7 +37,7 @@ XKore_ID
 
 # It is not advised to set secureAdminPassword if you're using Xkore 2
 secureAdminPassword 1
-adminPassword juminead
+adminPassword twalieth
 callSign
 commandPrefix ;
 callSignGM 0
@@ -65,7 +65,7 @@ allowedMaps_reaction 1
 attackAuto 2
 attackAuto_party 1
 attackAuto_onlyWhenSafe 0
-attackAuto_followTarget 0
+attackAuto_followTarget 1
 attackAuto_inLockOnly 1
 attackAuto_notInTown 1
 attackAuto_notWhile_storageAuto 1
@@ -78,7 +78,7 @@ attackDistanceAuto 1
 attackMaxDistance 1
 attackMaxRouteDistance 50
 attackMaxRouteTime 4
-attackMinPlayerDistance 2
+attackMinPlayerDistance
 attackMinPortalDistance 4
 attackUseWeapon 1
 attackNoGiveup 0
@@ -152,14 +152,14 @@ avoidList_inLockOnly 0
 avoidList_reconnect 1800
 avoidList_ignoreList
 
-avoidHiddenActors 0
+avoidHiddenActors 1
 avoidHiddenMonsters 0
 
 cachePlayerNames 1
 cachePlayerNames_duration 900
 cachePlayerNames_maxSize 100
 
-clientSight 17
+clientSight 19
 
 dcPause 1
 dcOnDeath 0
@@ -178,12 +178,12 @@ dcOnJobLevel
 dcOnLevel
 
 follow 0
-followTarget
+followTarget StepWizard
 followEmotion 1
 followEmotion_distance 4
 followFaceDirection 0
-followDistanceMax 6
-followDistanceMin 3
+followDistanceMax 13
+followDistanceMin 1
 followLostStep 10
 followSitAuto 0
 followBot 0
@@ -191,7 +191,7 @@ followBot 0
 itemsTakeAuto 0
 itemsTakeAuto_party 0
 itemsGatherAuto 0
-itemsGatherAuto_notInTown 0
+itemsGatherAuto_notInTown 1
 itemsGatherAutoMinPlayerDistance 6
 itemsGatherAutoMinPortalDistance 5
 itemsMaxWeight 89
@@ -201,7 +201,7 @@ cartMaxWeight 7900
 itemsTakeGreed 0
 itemsCheckWeight 1
 
-lockMap gef_fild08
+lockMap gef_fild14
 lockMap_x
 lockMap_y
 lockMap_randX
@@ -222,7 +222,7 @@ route_teleport_maxTries 20
 route_teleport_notInMaps
 route_step 10
 route_removeMissingPortals_NPC 1
-route_removeMissingPortals 0
+route_removeMissingPortals 1
 route_tryToGuessMissingPortalByDistance 1
 route_reAddMissingPortals 1
 
@@ -232,7 +232,7 @@ runFromTarget_dist 5
 runFromTarget_minStep 7
 runFromTarget_maxPathDistance 13
 
-saveMap prontera
+saveMap gonryun
 saveMap_warpToBuyOrSell 1
 saveMap_warpChatCommand
 memo1
@@ -247,8 +247,8 @@ shop_useSkill 1
 buyerShopAuto_open 0
 buyerShop_random 0
 
-sitAuto_hp_lower 0
-sitAuto_hp_upper 0
+sitAuto_hp_lower 10%
+sitAuto_hp_upper 100%
 sitAuto_sp_lower 0
 sitAuto_sp_upper 0
 sitAuto_follow 0
@@ -259,7 +259,7 @@ sitAuto_look_from_wall
 sitTensionRelax 0
 
 statsAddAuto 1
-statsAddAuto_list 20 vit, 20 str, 20 dex, 20 agi, 50 str, 20 int, 50 vit, 70 str, 70 vit , 50 agi
+statsAddAuto_list 20 vit, 20 str, 20 dex, 20 agi, 50 str, 20 int, 50 vit, 70 str, 70 vit , 50 agi, 90 str, 74 vit, 28 luk
 statsAddAuto_dontUseBonus 1
 statsAdd_over_99 0
 
@@ -267,7 +267,7 @@ skillsAddAuto 0
 skillsAddAuto_list
 
 tankMode 0
-tankModeTarget
+tankModeTarget StepWizard
 
 teleportAuto_hp 10%
 teleportAuto_sp 0
@@ -277,13 +277,13 @@ teleportAuto_search 0
 teleportAuto_minAggressives 0
 teleportAuto_minAggressivesInLock 0
 teleportAuto_onlyWhenSafe 0
-teleportAuto_maxDmg 1000
+teleportAuto_maxDmg 0
 teleportAuto_maxDmgInLock 0
 teleportAuto_deadly 1
 teleportAuto_useSkill 1
 teleportAuto_useChatCommand
-teleportAuto_allPlayers 1
-teleportAuto_notPlayers FatherBango BombaBoy
+teleportAuto_allPlayers 0
+teleportAuto_notPlayers FatherBango StepBro
 teleportAuto_atkCount 0
 teleportAuto_atkMiss 10
 teleportAuto_unstuck 0
@@ -888,7 +888,7 @@ useSelf_item {
 #602 10 1 0 # Butterfly Wing
 #601 100 1 0 # Fly Wing
 buyAuto 602 {
-	npc prontera 157 198
+	npc gonryun 152 124
 	npc_steps b
 	isMarket 0
 	standpoint
@@ -904,7 +904,7 @@ buyAuto 602 {
 }
 
 buyAuto 601 {
-	npc prontera 157 198
+	npc gonryun 152 124
 	npc_steps b
 	isMarket 0
 	standpoint
@@ -919,15 +919,15 @@ buyAuto 601 {
 	minBase
 }
 
-buyAuto Awakening Potion {
-	npc prontera 157 198
+buyAuto Berserk Potion {
+	npc gonryun 152 124
 	npc_steps b
 	isMarket 0
 	standpoint
 	distance 3
 	price
 	minAmount 1
-	maxAmount 10
+	maxAmount 5
 	batchSize
 	onlyIdentified
 	disabled 0
@@ -935,29 +935,29 @@ buyAuto Awakening Potion {
 	minBase
 }
 
-useSelf_item Awakening Potion {
+useSelf_item Berserk Potion {
 	onAction Attack
-	whenStatusInactive Awakening Potion
+	whenStatusInactive Berserk Potion
 	notWhileSitting 1
-	inInventory Awakening Potion
-	disabled 1
+	inInventory Berserk Potion
+	#disabled 1
 }
 
 sellAuto 1
-sellAuto_npc prontera 157 198
+sellAuto_npc gonryun 152 124
 sellAuto_standpoint
 sellAuto_distance 3
 sellAuto_maxDistance
 sellAuto_npc_steps s
 
 storageAuto 1
-storageAuto_npc prontera 154 198
+storageAuto_npc gonryun 154 127
 storageAuto_standpoint
 storageAuto_distance 3
 storageAuto_maxDistance
 storageAuto_npc_type 3
 storageAuto_type 0
-storageAuto_npc_steps c r0 c
+storageAuto_npc_steps c r0
 storageAuto_password
 storageAuto_keepOpen 0
 storageAuto_useChatCommand

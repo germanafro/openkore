@@ -46,7 +46,8 @@ all 0 1 0
 
 602 10 1 0 # Butterfly Wing
 601 100 1 0 # Fly Wing
-Awakening Potion 10 1 0
+#Awakening Potion 10 1 0
+Berserk Potion 10 1 0
 
 #505 0 1 0 # Blue Potion
 #545 50 1 0 # Condensed Red Potion
@@ -68,6 +69,12 @@ Awakening Potion 10 1 0
 #########################
 ##### SELLING ITEMS #####
 #########################
+
+Pearl 0 0 1 # 2211
+Piece of Cake 0 0 1 # 2211
+Candy 0 0 1 # 2211
+Candy Cane 0 0 1 # 2211
+Pacifier 0 0 1
 
 
 ##### WORTHLESS GEARS #####
