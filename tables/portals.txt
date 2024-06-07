@@ -16,6 +16,7 @@ geffen 128 69 prontera 155 183 r1 r0
 geffen 128 69 gonryun 163 127 r1 r10
 
 gonryun 163 127 prontera 155 183 r1 r0
+gonryun 163 127 alberta 116 57 r1 r1
 gonryun 163 127 comodo 189 148 r1 r6
 gonryun 163 127 geffen 119 59 r1 r9
 gonryun 163 127 aldebaran 140 115 r1 r2
@@ -25,13 +26,27 @@ payon 180 108 prontera 155 183 r1 r0
 payon 180 108 gonryun 163 127 r1 r10
 
 #warper Dungeon
+prontera 159 193 iz_dun00 169 168 r2 r6
 prontera 159 193 orcsdun01 32 170 r2 r23
 prontera 159 193 pay_dun00 21 183 r2 r24
 prontera 159 193 xmas_dun01 205 15 r2 r31
 
+gef_fild10 71 339 gonryun 163 127 r1 r10
+
+gonryun 163 127 iz_dun00 169 168 r2 r6
+gonryun 163 127 mosk_dun01 189 48 r2 r21
+
 gonryun 163 127 orcsdun01 32 170 r2 r23
 gonryun 163 127 pay_dun00 21 183 r2 r24
+
+gonryun 163 127 moc_pryd01 192 9 r2 r25
+moc_ruins 64 164 gonryun 163 127 r1 r10
+
+gonryun 163 127 in_sphinx1 288 9 r2 r27
+
 gonryun 163 127 xmas_dun01 205 15 r2 r31
+
+
 
 #Glastheim
 prontera 159 193 glast_01 370 304 r2 r13
@@ -116,3 +131,97 @@ geffen_in 28 156 geffen 98 141
 geffen 98 141 geffen_in 28 160
 gon_dun01 153 45 gonryun 159 201
 gonryun 159 201 gon_dun01 153 48
+gl_church 156 4 glast_01 200 137
+glast_01 200 137 gl_church 156 7
+gl_chyard 147 287 gl_church 16 299
+gl_church 16 299 gl_chyard 147 284
+prt_church 100 56 prontera 237 317
+prontera 237 317 prt_church 100 60
+gef_fild10 215 51 gef_fild10 63 337
+in_orcs01 29 116 gef_fild10 138 284
+moc_ruins 54 161 moc_pryd01 195 9
+moc_pryd01 195 9 moc_ruins 60 161
+moc_pryd02 10 195 moc_pryd01 10 195
+moc_pryd01 10 195 moc_pryd02 10 192
+moc_pryd02 10 195 moc_pryd01 10 195
+moc_pryd01 10 195 moc_pryd02 10 192
+moc_pryd03 100 97 moc_pryd02 100 99
+moc_pryd02 100 99 moc_pryd03 100 92
+moc_pryd03 100 97 moc_pryd02 100 99
+moc_pryd02 100 99 moc_pryd03 100 92
+moc_pryd01 90 109 moc_pryd01 10 195
+moc_pryd03 12 15 moc_pryd03 100 97
+moc_pryd04 184 11 moc_pryd03 184 11
+moc_pryd03 184 11 moc_pryd04 181 11
+moc_pryd04 184 11 moc_pryd03 184 11
+moc_pryd03 184 11 moc_pryd04 181 11
+moc_prydb1 100 191 moc_pryd01 90 109
+moc_fild19 98 99 in_sphinx1 288 6
+in_sphinx1 288 6 moc_fild19 100 99
+moc_ruins 71 16 moc_fild19 71 170
+moc_fild19 71 170 moc_ruins 71 19
+moc_ruins 71 16 moc_fild19 71 170
+moc_fild19 71 170 moc_ruins 71 19
+in_sphinx2 149 77 in_sphinx1 80 191
+in_sphinx1 80 191 in_sphinx2 149 81
+in_sphinx3 210 57 in_sphinx2 276 272
+in_sphinx2 276 272 in_sphinx3 210 54
+in_sphinx3 210 57 in_sphinx2 276 272
+in_sphinx2 276 272 in_sphinx3 210 54
+in_sphinx3 70 111 in_sphinx3 70 83
+in_sphinx3 70 83 in_sphinx3 70 113
+in_sphinx3 70 111 in_sphinx3 70 83
+in_sphinx3 70 83 in_sphinx3 70 113
+in_sphinx3 35 227 in_sphinx3 60 227
+in_sphinx3 60 227 in_sphinx3 32 227
+in_sphinx3 35 227 in_sphinx3 60 227
+in_sphinx3 60 227 in_sphinx3 32 227
+in_sphinx4 10 224 in_sphinx3 12 69
+in_sphinx3 12 69 in_sphinx4 10 222
+mosk_fild02 190 257 mosk_dun01 189 42
+mosk_dun01 189 42 mosk_fild02 190 254
+gef_tower 52 181 geffen 120 114
+geffen 120 114 gef_tower 52 177
+gef_tower 52 181 geffen 120 114
+geffen 120 114 gef_tower 52 177
+gef_tower 158 174 gef_tower 52 136
+gef_tower 52 136 gef_tower 158 169
+gef_tower 158 174 gef_tower 52 136
+gef_tower 52 136 gef_tower 158 169
+gef_tower 158 128 gef_tower 158 150
+gef_tower 158 150 gef_tower 158 124
+gef_tower 158 128 gef_tower 158 150
+gef_tower 158 150 gef_tower 158 124
+gef_tower 156 93 gef_tower 158 104
+gef_tower 158 104 gef_tower 156 90
+gef_tower 156 93 gef_tower 158 104
+gef_tower 158 104 gef_tower 156 90
+gef_dun00 104 103 gef_tower 153 28
+gef_dun00 104 103 gef_tower 153 28
+gef_tower 153 28 gef_dun00 104 99
+gef_tower 153 28 gef_dun00 104 99
+gef_dun01 115 240 gef_dun00 107 169
+gef_dun00 107 169 gef_dun01 115 236
+gef_dun01 115 240 gef_dun00 107 169
+gef_dun00 107 169 gef_dun01 115 236
+in_orcs01 162 55 gef_fild10 215 51
+in_orcs01 162 55 gef_fild10 215 51
+iz_dun01 253 258 iz_dun00 352 342
+iz_dun00 352 342 iz_dun01 253 252
+iz_dun01 253 258 iz_dun00 352 342
+iz_dun00 352 342 iz_dun01 253 252
+iz_dun02 236 198 iz_dun01 118 170
+iz_dun01 118 170 iz_dun02 236 204
+iz_dun02 236 198 iz_dun01 118 170
+iz_dun01 118 170 iz_dun02 236 204
+iz_dun03 29 63 iz_dun02 339 331
+iz_dun02 339 331 iz_dun03 32 63
+iz_dun03 29 63 iz_dun02 339 331
+iz_dun02 339 331 iz_dun03 32 63
+xmas_dun01 205 13 xmas_dun01 205 13
+gef_fild09 225 25 gef_fild10 251 371
+gef_fild09 225 25 gef_fild10 251 371
+pay_fild03 392 63 alberta 15 234
+alberta 15 234 pay_fild03 388 63
+pay_fild06 305 375 pay_fild03 313 16
+pay_fild03 313 16 pay_fild06 305 372

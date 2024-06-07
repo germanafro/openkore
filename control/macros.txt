@@ -1,0 +1,25 @@
+
+automacro loot {
+	console /You're now in the '#main' channel./i
+	call autoloot
+}
+
+automacro unstuck {
+	console /Cannot calculate a route/i
+	call resetLocation
+}
+
+macro autoloot {
+	do c @autoloot 100
+}
+
+macro resetLocation {
+	do respawn
+}
+
+macro go_storage {
+	do respawn
+	do move 154 125
+	do talk "Kafra Employee"
+	do talk resp 0
+}
