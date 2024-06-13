@@ -76,6 +76,19 @@ Candy 0 0 1 # 2211
 Candy Cane 0 0 1 # 2211
 Pacifier 0 0 1
 
+### niflheim etc loot ###
+
+Tangled Chains 0 0 1
+Broken Needle 0 0 1
+Armor Piece of Dullahan 0 0 1
+Needle Packet 0 0 1
+Ectoplasm 0 0 1
+Fabric 0 0 1
+Piece of Black Cloth 0 0 1
+Spool 0 0 1
+Red Muffler 0 0 1
+Helm of Dullahan 0 0 1
+Ragamuffin Manteau 0 0 1
 
 ##### WORTHLESS GEARS #####
 # Worthless gears which are sold by default

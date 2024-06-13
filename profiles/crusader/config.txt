@@ -37,7 +37,7 @@ XKore_ID
 
 # It is not advised to set secureAdminPassword if you're using Xkore 2
 secureAdminPassword 1
-adminPassword vaudriwo
+adminPassword critabre
 callSign
 commandPrefix ;
 callSignGM 0
@@ -65,7 +65,7 @@ allowedMaps_reaction 1
 attackAuto 2
 attackAuto_party 1
 attackAuto_onlyWhenSafe 0
-attackAuto_followTarget 1
+attackAuto_followTarget 0
 attackAuto_inLockOnly 1
 attackAuto_notInTown 1
 attackAuto_notWhile_storageAuto 1
@@ -177,7 +177,7 @@ dcOnServerClose 1
 dcOnJobLevel
 dcOnLevel
 
-follow 1
+follow 0
 followTarget StepBro
 followEmotion 1
 followEmotion_distance 4
@@ -201,7 +201,7 @@ cartMaxWeight 7900
 itemsTakeGreed 0
 itemsCheckWeight 1
 
-lockMap orcsdun02
+lockMap moc_fild02
 lockMap_x
 lockMap_y
 lockMap_randX
@@ -259,7 +259,7 @@ sitAuto_look_from_wall
 sitTensionRelax 0
 
 statsAddAuto 1
-statsAddAuto_list 20 vit, 20 str, 20 dex, 50 str, 20 int, 50 vit, 30 dex, 70 str, 70 vit , 99 vit, 99 int
+statsAddAuto_list 99 dex, 99 vit, 99 int
 statsAddAuto_dontUseBonus 1
 statsAdd_over_99 0
 
@@ -378,7 +378,7 @@ monster_filter
 
 ######## Mercenary Support ########
 
-mercenary_attackAuto 1
+mercenary_attackAuto 2
 mercenary_attackAuto_party 1
 mercenary_attackAuto_notInTown 1
 mercenary_attackAuto_inLockOnly 1
@@ -1002,9 +1002,16 @@ macro_orphans terminate
 attackSkillSlot Holy Cross {
 	lvl 10
 	sp > 50%
-	target_hp > 300
 	aggressives < 3
 }
+attackSkillSlot Shield Boomerang {
+	lvl 10
+	sp > 50%
+	target_hp > 500
+	aggressives < 3
+	timeout 1
+}
+
 
 attackSkillSlot Magnum Break {
 	lvl 10
@@ -1016,7 +1023,7 @@ useSelf_skill Endure {
 	whenStatusInactive Endure
 	isSelfSkill 1
 	notInTown 1
-	notWhileSitting 1
+	timeout 1
 }
 
 useSelf_skill Auto Guard {
@@ -1024,7 +1031,8 @@ useSelf_skill Auto Guard {
 	whenStatusInactive Auto Guard
 	isSelfSkill 1
 	notInTown 1
-	notWhileSitting 1
+	notWhileSitting1
+	timeout 1
 }
 
 useSelf_skill Reflect Shield {
@@ -1033,11 +1041,11 @@ useSelf_skill Reflect Shield {
 	isSelfSkill 1
 	notInTown 1
 	notWhileSitting 1
+	timeout 1
 }
 
 partySkill Devotion {
 	lvl 5
-	sp > 10%
 	notInTown 1
 	target_whenStatusInactive Devotion
 	target_dead 0

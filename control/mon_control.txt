@@ -68,6 +68,12 @@ Cruiser -1 0 0 # less profitable than myst cases
 Cookie -1 0 0 # less profitable than myst cases
 Christmas Cookie -1 0 0 # less profitable than myst cases
 
+# peco peco farming
+Peco Peco Egg -1 0 0
+Drops -1 0 0
+Picky -1 0 0
+Ant Egg -1 0 0
+
 #Orc Archer -1 1 0
 #Mimic -1 1 0 # fuk that mob >_>
 
