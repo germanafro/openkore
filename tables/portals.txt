@@ -1,9 +1,10 @@
 
 # warper town to town
+prontera 159 193 aldebaran 140 115 r1 r2
 prontera 159 193 comodo 189 148 r1 r6
 prontera 159 193 geffen 119 59 r1 r9
-prontera 159 193 aldebaran 140 115 r1 r2
 prontera 159 193 gonryun 163 127 r1 r10
+prontera 159 193 niflheim 194 186 r1 r21
 prontera 159 193 payon 173 100 r1 r22
 
 comodo 193 140 prontera 155 183 r1 r0
@@ -17,10 +18,14 @@ geffen 128 69 gonryun 163 127 r1 r10
 
 gonryun 163 127 prontera 155 183 r1 r0
 gonryun 163 127 alberta 116 57 r1 r1
+gonryun 163 127 aldebaran 140 115 r1 r2
 gonryun 163 127 comodo 189 148 r1 r6
 gonryun 163 127 geffen 119 59 r1 r9
-gonryun 163 127 aldebaran 140 115 r1 r2
+gonryun 163 127 niflheim 194 186 r1 r21
 gonryun 163 127 payon 173 100 r1 r22
+
+niflheim 184 187 prontera 155 183 r1 r0
+niflheim 184 187 gonryun 163 127 r1 r10
 
 payon 180 108 prontera 155 183 r1 r0
 payon 180 108 gonryun 163 127 r1 r10
@@ -226,4 +231,14 @@ gef_fild06 20 304 glast_01 377 304
 gef_fild10 136 331 gef_fild10 215 51
 gef_fild10 370 56 gef_fild10 27 219
 gef_fild03 18 52 gef_fild10 370 56
+nif_fild02 379 235 niflheim 18 151
+niflheim 18 151 nif_fild02 376 235
+nif_fild02 21 312 nif_fild01 345 323
+nif_fild01 345 323 nif_fild02 23 312
+moc_fild01 239 382 prt_fild08 233 16
+prt_fild08 233 16 moc_fild01 238 378
+moc_fild02 67 342 moc_fild01 321 16
+moc_fild01 321 16 moc_fild02 77 338
+pay_fild04 194 17 moc_fild02 350 339
+moc_fild02 350 339 pay_fild04 194 20
 gef_fild10 104 21 gef_fild10 63 337
