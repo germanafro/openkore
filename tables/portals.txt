@@ -247,6 +247,7 @@ moc_fild02 67 342 moc_fild01 321 16
 moc_fild01 321 16 moc_fild02 77 338
 pay_fild04 194 17 moc_fild02 350 339
 moc_fild02 350 339 pay_fild04 194 20
+gef_fild10 104 21 gef_fild10 63 337
 prt_fild08 55 21 prt_fild08 170 378
 moc_fild13 146 368 moc_fild02 71 18
 moc_fild02 71 18 moc_fild13 146 365

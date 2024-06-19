@@ -37,7 +37,7 @@ XKore_ID
 
 # It is not advised to set secureAdminPassword if you're using Xkore 2
 secureAdminPassword 1
-adminPassword zejatous
+adminPassword dreavavo
 callSign
 commandPrefix ;
 callSignGM 0
@@ -201,7 +201,7 @@ cartMaxWeight 7900
 itemsTakeGreed 0
 itemsCheckWeight 1
 
-lockMap gef_fild14
+lockMap prt_fild08
 lockMap_x
 lockMap_y
 lockMap_randX
