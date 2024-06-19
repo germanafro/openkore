@@ -46,7 +46,7 @@ all 0 1 0
 
 602 10 1 0 # Butterfly Wing
 601 100 1 0 # Fly Wing
-#Awakening Potion 10 1 0
+Awakening Potion 10 1 0
 Berserk Potion 10 1 0
 
 #505 0 1 0 # Blue Potion
@@ -83,6 +83,7 @@ Pacifier 0 0 1
 Puppy Headband 0 0 1 # 
 
 Adventurer's Suit 0 0 1 # 2305
+"Adventurer's Suit [1]" 0 0 1 # 2305
 Bandana 0 0 1 # 2211
 Biretta 0 0 1 # 2217
 Boots 0 0 1 # 2405

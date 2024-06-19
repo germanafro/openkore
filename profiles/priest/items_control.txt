@@ -66,6 +66,8 @@ all 0 1 0
 #Silver Arrow 2000 1 0
 #Trap 50 1 0
 Blue Gemstone 50 1 0
+Holy Water 100 1 0
+
 
 #########################
 ##### SELLING ITEMS #####

@@ -73,6 +73,9 @@ Peco Peco Egg -1 0 0
 Drops -1 0 0
 Picky -1 0 0
 Ant Egg -1 0 0
+Muscipular -1 -5 0 # too stronk
+Roween -1 0 0 # not worth it.
+Stapo -1 0 0 # very high def D:
 
 #Orc Archer -1 1 0
 #Mimic -1 1 0 # fuk that mob >_>

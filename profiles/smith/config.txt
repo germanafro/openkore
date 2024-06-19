@@ -37,7 +37,7 @@ XKore_ID
 
 # It is not advised to set secureAdminPassword if you're using Xkore 2
 secureAdminPassword 1
-adminPassword tweastau
+adminPassword lojewres
 callSign
 commandPrefix ;
 callSignGM 0
@@ -201,7 +201,7 @@ cartMaxWeight 7900
 itemsTakeGreed 0
 itemsCheckWeight 1
 
-lockMap moc_fild01
+lockMap orcsdun01
 lockMap_x
 lockMap_y
 lockMap_randX
@@ -269,7 +269,7 @@ skillsAddAuto_list
 tankMode 0
 tankModeTarget StepWizard
 
-teleportAuto_hp 10%
+teleportAuto_hp 20%
 teleportAuto_sp 0
 teleportAuto_idle 0
 teleportAuto_portal 0
@@ -919,7 +919,7 @@ buyAuto 601 {
 	minBase
 }
 
-buyAuto Berserk Potion {
+buyAuto Awakening Potion {
 	npc gonryun 152 124
 	npc_steps b
 	isMarket 0
@@ -935,6 +935,36 @@ buyAuto Berserk Potion {
 	minBase
 }
 
+useSelf_item Awakening Potion {
+	onAction Attack
+	whenStatusInactive Awakening Potion
+	notWhileSitting 1
+	inInventory Awakening Potion
+	timeout 5
+	#disabled 1
+}
+
+useSelf_item Meat {
+	hp < 50%
+	inInventory Meat
+}
+
+#buyAuto Berserk Potion {
+#	npc gonryun 152 124
+#	npc_steps b
+#	isMarket 0
+#	standpoint
+#	distance 3
+#	price
+#	minAmount 1
+#	maxAmount 5
+#	batchSize
+#	onlyIdentified
+#	disabled 0
+#	maxBase
+#	minBase
+#}
+
 #useSelf_item Berserk Potion {
 #	onAction Attack
 #	whenStatusInactive Berserk Potion
@@ -943,14 +973,14 @@ buyAuto Berserk Potion {
 #	#disabled 1
 #}
 
-sellAuto 0
+sellAuto 1
 sellAuto_npc gonryun 152 124
 sellAuto_standpoint
 sellAuto_distance 3
 sellAuto_maxDistance
 sellAuto_npc_steps s
 
-storageAuto 0
+storageAuto 1
 storageAuto_npc gonryun 154 127
 storageAuto_standpoint
 storageAuto_distance 3
@@ -1036,4 +1066,9 @@ useSelf_skill Power Thrust {
 	isSelfSkill 1
 	notInTown 1
 	notWhileSitting 1
+}
+
+attackSkillSlot Cart Revolution {
+	lvl 1
+	aggressives >= 2
 }

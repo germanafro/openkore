@@ -6,6 +6,7 @@ prontera 159 193 geffen 119 59 r1 r9
 prontera 159 193 gonryun 163 127 r1 r10
 prontera 159 193 niflheim 194 186 r1 r21
 prontera 159 193 payon 173 100 r1 r22
+prontera 159 193 rachel 130 110 r1 r23
 
 comodo 193 140 prontera 155 183 r1 r0
 comodo 193 140 gonryun 163 127 r1 r10
@@ -23,12 +24,16 @@ gonryun 163 127 comodo 189 148 r1 r6
 gonryun 163 127 geffen 119 59 r1 r9
 gonryun 163 127 niflheim 194 186 r1 r21
 gonryun 163 127 payon 173 100 r1 r22
+gonryun 163 127 rachel 130 110 r1 r23
 
 niflheim 184 187 prontera 155 183 r1 r0
 niflheim 184 187 gonryun 163 127 r1 r10
 
 payon 180 108 prontera 155 183 r1 r0
 payon 180 108 gonryun 163 127 r1 r10
+
+rachel 120 105 prontera 155 183 r1 r0
+rachel 120 105 gonryun 163 127 r1 r10
 
 #warper Dungeon
 prontera 159 193 iz_dun00 169 168 r2 r6
@@ -242,3 +247,11 @@ moc_fild01 321 16 moc_fild02 77 338
 pay_fild04 194 17 moc_fild02 350 339
 moc_fild02 350 339 pay_fild04 194 20
 gef_fild10 104 21 gef_fild10 63 337
+rachel 25 125 ra_fild11 353 226
+ra_fild11 360 226 rachel 30 125
+ra_fild11 233 27 ve_fild01 243 363
+ve_fild01 243 368 ra_fild11 232 32
+ve_fild01 184 20 ve_fild04 174 334
+ve_fild04 174 339 ve_fild01 184 25ra_fild11 202 335 ra_fild11 360 226
+gl_knt02 157 292 gl_knt01 150 291
+gl_knt01 150 291 gl_knt02 157 287

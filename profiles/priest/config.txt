@@ -37,7 +37,7 @@ XKore_ID
 
 # It is not advised to set secureAdminPassword if you're using Xkore 2
 secureAdminPassword 1
-adminPassword dreavavo
+adminPassword stidraus
 callSign
 commandPrefix ;
 callSignGM 0
@@ -178,7 +178,7 @@ dcOnJobLevel
 dcOnLevel
 
 follow 1
-followTarget JenniesHammer
+followTarget Antiraydric
 followEmotion 1
 followEmotion_distance 4
 followFaceDirection 1
@@ -201,7 +201,7 @@ cartMaxWeight 7900
 itemsTakeGreed 0
 itemsCheckWeight 1
 
-lockMap prt_fild08
+lockMap gl_knt02
 lockMap_x
 lockMap_y
 lockMap_randX
@@ -986,6 +986,7 @@ useSelf_skill AL_BLESSING {
 	whenStatusInactive Blessing
 	hp > 80%
 	notInTown 1
+	inLockOnly 1
 }
 
 useSelf_skill AL_ANGELUS {
@@ -998,6 +999,7 @@ useSelf_skill AL_ANGELUS {
 	notInTown 1
 	notWhileSitting 1
 	timeout 30
+	inLockOnly 1
 }
 
 useSelf_skill PR_MAGNIFICAT {
@@ -1008,6 +1010,7 @@ useSelf_skill PR_MAGNIFICAT {
 	whenPartyMembersNearDist 3
 	isSelfSkill 1
 	notInTown 1
+	inLockOnly 1
 }
 
 useSelf_skill PR_GLORIA {
@@ -1019,6 +1022,7 @@ useSelf_skill PR_GLORIA {
 	timeout 30
 	notWhileSitting 1
 	notInTown 1
+	inLockOnly 1
 }
 
 partySkill Heal {
@@ -1032,7 +1036,6 @@ partySkill Resurrection {
 	lvl 4
 	hp > 80%
 	target_dead 1
-	whenStatusActive EFST_KYRIE
 	notInTown 1
 }
 
@@ -1104,6 +1107,17 @@ attackSkillSlot Lex Aeterna {
 	lvl 1
 	sp > 10%
 	hp > 80%
-	target_whenStatusActive
 	target_whenStatusInactive Lex Aeterna
+}
+
+partySkill Aspersio {
+	lvl 10
+	hp > 80%
+	target_dead 0
+	target_hp > 80%
+	target_whenStatusInactive Aspersio
+	timeout 120
+	inInventory Holy Water
+	notInTown 1
+	inLockOnly 1
 }
