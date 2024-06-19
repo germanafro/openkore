@@ -39,6 +39,8 @@ prontera 159 193 xmas_dun01 205 15 r2 r31
 gef_fild10 71 339 gonryun 163 127 r1 r10
 
 gonryun 163 127 iz_dun00 169 168 r2 r6
+
+
 gonryun 163 127 mosk_dun01 189 48 r2 r21
 
 gonryun 163 127 orcsdun01 32 170 r2 r23
@@ -51,6 +53,10 @@ gonryun 163 127 in_sphinx1 288 9 r2 r27
 
 gonryun 163 127 xmas_dun01 205 15 r2 r31
 
+#Cursed Abbey
+prontera 159 193 nameless_n 254 216 r2 r9
+gonryun 163 127 nameless_n 254 216 r2 r9
+nameless_n 259 213 gonryun 163 127 r1 r10
 
 
 #Glastheim
@@ -241,3 +247,8 @@ moc_fild02 67 342 moc_fild01 321 16
 moc_fild01 321 16 moc_fild02 77 338
 pay_fild04 194 17 moc_fild02 350 339
 moc_fild02 350 339 pay_fild04 194 20
+prt_fild08 55 21 prt_fild08 170 378
+moc_fild13 146 368 moc_fild02 71 18
+moc_fild02 71 18 moc_fild13 146 365
+gef_dun02 106 134 gef_dun01 197 38
+gef_dun01 197 38 gef_dun02 106 132

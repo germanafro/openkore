@@ -37,7 +37,7 @@ XKore_ID
 
 # It is not advised to set secureAdminPassword if you're using Xkore 2
 secureAdminPassword 1
-adminPassword crokawro
+adminPassword kishedro
 callSign
 commandPrefix ;
 callSignGM 0
@@ -178,7 +178,7 @@ dcOnJobLevel
 dcOnLevel
 
 follow 1
-followTarget BestLeader
+followTarget StepBro
 followEmotion 1
 followEmotion_distance 4
 followFaceDirection 0
@@ -1021,25 +1021,25 @@ useSelf_skill PR_MAGNIFICAT {
 	notInTown 1
 }
 
-useSelf_skill PR_GLORIA {
-	lvl 10
-	hp > 80%
-	target_hp > 80%
-	whenStatusInactive Gloria
-	target_whenStatusInactive Gloria
-	whenPartyMembersNearDist 5
-	isSelfSkill 1
-	timeout 10
-	notWhileSitting 1
-	notInTown 1
-}
+#useSelf_skill PR_GLORIA {
+#	lvl 10
+#	hp > 80%
+#	target_hp > 80%
+#	whenStatusInactive Gloria
+#	target_whenStatusInactive Gloria
+#	whenPartyMembersNearDist 5
+#	isSelfSkill 1
+#	timeout 10
+#	notWhileSitting 1
+#	notInTown 1
+#}
 
-useSelf_skill 31 {
-	lvl 10
-	hp > 80%
-	inInventory Empty Bottle
-	notInTown 1
-}
+#useSelf_skill 31 {
+#	lvl 10
+#	hp > 80%
+#	inInventory Empty Bottle
+#	notInTown 1
+#}
 
 #partySkill Aspersio {
 #	lvl 10
@@ -1097,6 +1097,7 @@ partySkill PR_IMPOSITIO {
 	sp > 10%
 	hp > 80%
 	target_hp > 80%
+	target_isJob Knight
 	notWhileSitting 1
 	notInTown 1
 	whenPartyMembersNearDist 5
@@ -1109,9 +1110,22 @@ partySkill PR_KYRIE {
 	lvl 10
 	sp > 10%
 	hp > 80%
-	target_hp > 8000
+	target_hp > 80%
 	notInTown 1
 	whenPartyMembersNearDist 5
 	target_whenStatusInactive EFST_KYRIE
+	target_dead 0
+}
+
+partySkill Suffragium {
+	lvl 10
+	sp > 10%
+	hp > 80%
+	target_hp > 80%
+	target_isJob Priest
+	notWhileSitting 1
+	notInTown 1
+	whenPartyMembersNearDist 3
+	target_whenStatusInactive Suffragium
 	target_dead 0
 }

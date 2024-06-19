@@ -37,7 +37,7 @@ XKore_ID
 
 # It is not advised to set secureAdminPassword if you're using Xkore 2
 secureAdminPassword 1
-adminPassword critabre
+adminPassword wuclapap
 callSign
 commandPrefix ;
 callSignGM 0
@@ -62,17 +62,17 @@ alias_heal sp 28
 allowedMaps
 allowedMaps_reaction 1
 
-attackAuto 2
-attackAuto_party 1
+attackAuto -1
+attackAuto_party 0
 attackAuto_onlyWhenSafe 0
 attackAuto_followTarget 0
-attackAuto_inLockOnly 1
+attackAuto_inLockOnly 0
 attackAuto_notInTown 1
 attackAuto_notWhile_storageAuto 1
 attackAuto_notWhile_buyAuto 1
 attackAuto_notWhile_sellAuto 1
-attackAuto_considerDamagedAggressive 1
-attackBeyondMaxDistance_waitForAgressive 1
+attackAuto_considerDamagedAggressive 0
+attackBeyondMaxDistance_waitForAgressive 0
 attackDistance 1
 attackDistanceAuto 1
 attackMaxDistance 1
@@ -80,12 +80,12 @@ attackMaxRouteDistance 50
 attackMaxRouteTime 4
 attackMinPlayerDistance
 attackMinPortalDistance 4
-attackUseWeapon 1
+attackUseWeapon 0
 attackNoGiveup 0
 attackCanSnipe 0
 attackCheckLOS 0
 attackRouteMaxPathDistance 13
-attackLooters 1
+attackLooters 0
 attackLooters_dist 1
 attackChangeTarget 1
 aggressiveAntiKS 0
@@ -177,7 +177,7 @@ dcOnServerClose 1
 dcOnJobLevel
 dcOnLevel
 
-follow 0
+follow 1
 followTarget StepBro
 followEmotion 1
 followEmotion_distance 4
@@ -259,7 +259,7 @@ sitAuto_look_from_wall
 sitTensionRelax 0
 
 statsAddAuto 1
-statsAddAuto_list 99 dex, 99 vit, 99 int
+statsAddAuto_list 99 dex, str 20, 99 vit, 99 int
 statsAddAuto_dontUseBonus 1
 statsAdd_over_99 0
 
