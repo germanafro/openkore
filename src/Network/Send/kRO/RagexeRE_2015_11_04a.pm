@@ -50,6 +50,7 @@ sub new {
 		'0819' => ['search_store_info', 'v C V2 C2 a*', [qw(len type max_price min_price item_count card_count item_card_list)]],
 		'0835' => ['search_store_request_next_page'],
 		'0838' => ['search_store_select', 'a4 a4 v', [qw(accountID storeID nameID)]],
+		'0840' => ['map_login', 'a4 a4 a4 V C', [qw(accountID charID sessionID tick sex)]],
 		'09EC' => ['rodex_send_mail', 'v Z24 Z24 V v v a* a*', [qw(len receiver sender zeny title_len body_len title body)]],   # -1 -- RodexSendMail
 	);
 
