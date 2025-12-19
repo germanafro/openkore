@@ -37,7 +37,7 @@ XKore_ID
 
 # It is not advised to set secureAdminPassword if you're using Xkore 2
 secureAdminPassword 1
-adminPassword lojewres
+adminPassword nauswaiz
 callSign
 commandPrefix ;
 callSignGM 0
@@ -249,8 +249,8 @@ buyerShop_random 0
 
 sitAuto_hp_lower 10%
 sitAuto_hp_upper 100%
-sitAuto_sp_lower 0
-sitAuto_sp_upper 0
+sitAuto_sp_lower 10%
+sitAuto_sp_upper 100%
 sitAuto_follow 0
 sitAuto_over_50 0
 sitAuto_idle 1
@@ -259,7 +259,7 @@ sitAuto_look_from_wall
 sitTensionRelax 0
 
 statsAddAuto 1
-statsAddAuto_list 20 vit, 20 str, 90 agi, 90 str, 90 luk
+statsAddAuto_list 20 vit, 20 str, 90 agi, 20 int, 50 dex, 90 str, 90 vit
 statsAddAuto_dontUseBonus 1
 statsAdd_over_99 0
 
@@ -919,37 +919,7 @@ buyAuto 601 {
 	minBase
 }
 
-buyAuto Awakening Potion {
-	npc gonryun 152 124
-	npc_steps b
-	isMarket 0
-	standpoint
-	distance 3
-	price
-	minAmount 1
-	maxAmount 5
-	batchSize
-	onlyIdentified
-	disabled 0
-	maxBase
-	minBase
-}
-
-useSelf_item Awakening Potion {
-	onAction Attack
-	whenStatusInactive Awakening Potion
-	notWhileSitting 1
-	inInventory Awakening Potion
-	timeout 5
-	#disabled 1
-}
-
-useSelf_item Meat {
-	hp < 50%
-	inInventory Meat
-}
-
-#buyAuto Berserk Potion {
+#buyAuto Awakening Potion {
 #	npc gonryun 152 124
 #	npc_steps b
 #	isMarket 0
@@ -965,13 +935,48 @@ useSelf_item Meat {
 #	minBase
 #}
 
-#useSelf_item Berserk Potion {
+#useSelf_item Awakening Potion {
 #	onAction Attack
-#	whenStatusInactive Berserk Potion
+#	whenStatusInactive Awakening Potion
 #	notWhileSitting 1
-#	inInventory Berserk Potion
+#	inInventory Awakening Potion
+#	timeout 5
 #	#disabled 1
 #}
+
+useSelf_item Meat {
+	hp < 50%
+	inInventory Meat
+}
+
+useSelf_item Yellow Herb {
+	hp < 50%
+	inInventory Yellow Herb
+}
+
+buyAuto Berserk Potion {
+	npc gonryun 152 124
+	npc_steps b
+	isMarket 0
+	standpoint
+	distance 3
+	price
+	minAmount 1
+	maxAmount 5
+	batchSize
+	onlyIdentified
+	disabled 0
+	maxBase
+	minBase
+}
+
+useSelf_item Berserk Potion {
+	onAction Attack
+	whenStatusInactive Berserk Potion
+	notWhileSitting 1
+	inInventory Berserk Potion
+	#disabled 1
+}
 
 sellAuto 1
 sellAuto_npc gonryun 152 124
@@ -1068,7 +1073,23 @@ useSelf_skill Power Thrust {
 	notWhileSitting 1
 }
 
+useSelf_skill Maximum Power Thrust {
+	lvl 10
+	whenStatusInactive Maximum Power Thrust
+	isSelfSkill 1
+	notInTown 1
+	notWhileSitting 1
+}
+
+useSelf_skill Meltdown {
+	lvl 10
+	whenStatusInactive Meltdown
+	isSelfSkill 1
+	notInTown 1
+	notWhileSitting 1
+}
+
 attackSkillSlot Cart Revolution {
 	lvl 1
-	aggressives >= 2
+	aggressives >= 3
 }

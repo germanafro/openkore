@@ -49,3 +49,10 @@ tables/**/npcs.txt
 tables/**/monsters.txt
 *.xpm
 *.weight
+.trunk/.gitignore
+.trunk/trunk.yaml
+.trunk/configs/.isort.cfg
+.trunk/configs/.markdownlint.yaml
+.trunk/configs/.shellcheckrc
+.trunk/configs/.yamllint.yaml
+.trunk/configs/ruff.toml

@@ -350,10 +350,12 @@ dead_message iRO Transcendence was closed on 31 of March, 2022. Visit official w
 
 
 # https://www.deviruchiclub.com/seacp/
+# old ip 51.79.241.153
+# old ip 38.60.199.195
 [Devil RO]
-ip 51.79.241.153
+ip 91.236.230.29
 port 6900
-version 37
+version 55
 private 1
 master_version 1
 serverType kRO_RagexeRE_2015_11_04a

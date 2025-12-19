@@ -3617,3 +3617,5 @@ un_bunker 229 163 un_bunker 159 52
 un_bunker 164 51 un_bunker 233 164
 un_bunker 366 164 un_bunker 31 51
 un_bunker 27 52 un_bunker 361 163
+aldebaran 139 135 c_tower1 199 159
+aldebaran 139 135 c_tower1 199 159
