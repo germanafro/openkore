@@ -3619,3 +3619,6 @@ un_bunker 366 164 un_bunker 31 51
 un_bunker 27 52 un_bunker 361 163
 aldebaran 139 135 c_tower1 199 159
 aldebaran 139 135 c_tower1 199 159
+payon 228 330 pay_arche 81 18
+pay_arche 81 18 payon 228 326
+aldebaran 140 244 xmas_fild01 84 48

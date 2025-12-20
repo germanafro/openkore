@@ -37,7 +37,7 @@ XKore_ID
 
 # It is not advised to set secureAdminPassword if you're using Xkore 2
 secureAdminPassword 1
-adminPassword frotwuva
+adminPassword cishirup
 callSign
 commandPrefix ;
 callSignGM 0
@@ -201,7 +201,7 @@ cartMaxWeight 7900
 itemsTakeGreed 0
 itemsCheckWeight 1
 
-lockMap alde_dun02
+lockMap moc_pryd04
 lockMap_x
 lockMap_y
 lockMap_randX

@@ -64,6 +64,11 @@ Golem 0 0 0# high def and no desirable drops
 Eggyra 0 0 0# high def and no desirable drops
 Megalodon 0 0 0
 Stalactic Golem 0 0 0 #too dangerous
+
+#xmas_dun02
+Poring -1 0 0 # less profitable than myst cases
+Marin -1 0 0 # less profitable than myst cases
+Poporing -1 0 0 # less profitable than myst cases
 Cruiser -1 0 0 # less profitable than myst cases
 Cookie -1 0 0 # less profitable than myst cases
 Christmas Cookie -1 0 0 # less profitable than myst cases

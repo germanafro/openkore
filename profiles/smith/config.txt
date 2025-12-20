@@ -3,7 +3,7 @@
 
 ######## Login options and server-specific options ########
 
-master Devil RO
+master Devil RO2
 server 0
 username loco69
 password Maf!a3604
@@ -37,7 +37,7 @@ XKore_ID
 
 # It is not advised to set secureAdminPassword if you're using Xkore 2
 secureAdminPassword 1
-adminPassword nauswaiz
+adminPassword kigaswep
 callSign
 commandPrefix ;
 callSignGM 0
@@ -201,7 +201,7 @@ cartMaxWeight 7900
 itemsTakeGreed 0
 itemsCheckWeight 1
 
-lockMap orcsdun01
+lockMap gef_fild14
 lockMap_x
 lockMap_y
 lockMap_randX
@@ -259,7 +259,7 @@ sitAuto_look_from_wall
 sitTensionRelax 0
 
 statsAddAuto 1
-statsAddAuto_list 20 vit, 20 str, 90 agi, 20 int, 50 dex, 90 str, 90 vit
+statsAddAuto_list 20 vit, 20 str, 99 agi, 20 int, 58 dex, 90 str, 90 vit
 statsAddAuto_dontUseBonus 1
 statsAdd_over_99 0
 
@@ -1034,6 +1034,7 @@ macro_orphans terminate
 
 useSelf_skill Crazy Uproar {
 	lvl 10
+	sp > 20%
 	whenStatusInactive Crazy Uproar
 	isSelfSkill 1
 	notInTown 1
@@ -1042,6 +1043,7 @@ useSelf_skill Crazy Uproar {
 
 useSelf_skill Adrenaline Rush {
 	lvl 10
+	sp > 20%
 	whenStatusInactive Adrenaline Rush
 	isSelfSkill 1
 	notInTown 1
@@ -1051,6 +1053,7 @@ useSelf_skill Adrenaline Rush {
 
 useSelf_skill Weapon Perfection {
 	lvl 10
+	sp > 30%
 	whenStatusInactive Weapon Perfection
 	isSelfSkill 1
 	notInTown 1
@@ -1059,22 +1062,31 @@ useSelf_skill Weapon Perfection {
 
 useSelf_skill Maximize Power {
 	lvl 10
+	sp > 50%
 	whenStatusInactive Maximize Power
 	isSelfSkill 1
 	notInTown 1
 	notWhileSitting 1
 }
 
-useSelf_skill Power Thrust {
+useSelf_skill Maximize Power {
 	lvl 10
-	whenStatusInactive Power Thrust
+	sp < 10%
+	whenStatusActive Maximize Power
 	isSelfSkill 1
-	notInTown 1
-	notWhileSitting 1
 }
+
+#useSelf_skill Power Thrust {
+#	lvl 10
+#	whenStatusInactive Power Thrust
+#	isSelfSkill 1
+#	notInTown 1
+#	notWhileSitting 1
+#}
 
 useSelf_skill Maximum Power Thrust {
 	lvl 10
+	sp > 30%
 	whenStatusInactive Maximum Power Thrust
 	isSelfSkill 1
 	notInTown 1
@@ -1083,13 +1095,23 @@ useSelf_skill Maximum Power Thrust {
 
 useSelf_skill Meltdown {
 	lvl 10
+	sp > 50%
 	whenStatusInactive Meltdown
 	isSelfSkill 1
 	notInTown 1
 	notWhileSitting 1
 }
 
+useSelf_skill Cart Boost {
+	lvl 10
+	sp > 10%
+	whenStatusInactive Cart Boost
+	isSelfSkill 1
+	notWhileSitting 1
+}
+
 attackSkillSlot Cart Revolution {
 	lvl 1
+	sp > 20%
 	aggressives >= 3
 }

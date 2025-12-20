@@ -37,7 +37,7 @@ XKore_ID
 
 # It is not advised to set secureAdminPassword if you're using Xkore 2
 secureAdminPassword 1
-adminPassword stidraus
+adminPassword yutrecho
 callSign
 commandPrefix ;
 callSignGM 0
@@ -178,7 +178,7 @@ dcOnJobLevel
 dcOnLevel
 
 follow 1
-followTarget Antiraydric
+followTarget JenniesHammer
 followEmotion 1
 followEmotion_distance 4
 followFaceDirection 1
@@ -201,7 +201,7 @@ cartMaxWeight 7900
 itemsTakeGreed 0
 itemsCheckWeight 1
 
-lockMap gl_knt02
+lockMap gef_fild14
 lockMap_x
 lockMap_y
 lockMap_randX
@@ -1110,14 +1110,14 @@ attackSkillSlot Lex Aeterna {
 	target_whenStatusInactive Lex Aeterna
 }
 
-partySkill Aspersio {
-	lvl 10
-	hp > 80%
-	target_dead 0
-	target_hp > 80%
-	target_whenStatusInactive Aspersio
-	timeout 120
-	inInventory Holy Water
-	notInTown 1
-	inLockOnly 1
-}
+#partySkill Aspersio {
+#	lvl 10
+#	hp > 80%
+#	target_dead 0
+#	target_hp > 80%
+#	target_whenStatusInactive Aspersio
+#	timeout 120
+#	inInventory Holy Water
+#	notInTown 1
+#	inLockOnly 1
+#}
